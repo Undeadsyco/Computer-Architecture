@@ -2,143 +2,154 @@
 <html lang="en">
 
 <head>
- <meta charset="UTF-8">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Document</title>
- <link rel="stylesheet" href="./css/index.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/adder.css">
 </head>
 
 <body>
- <div id="window">
-  <div id="title">
-   <h1>Adder</h1>
-   <h3><a href="./index.html">GO Back</a></h3>
+  <div id="window">
+    <div id="title">
+      <h1>Adder</h1>
+      <h3><a href="./index.html">GO Back</a></h3>
+    </div>
+    <div id="container">
+      <div id="formContainer">
+        <form id="inputForm">
+          <label for="inputA">
+            Input A:
+            <label for="inputADecimal">
+              Decimal
+              <input type="number" name="inputADecimal" id="inputADecimal">
+            </label>
+            <label for="inputABinary">
+              Binary
+              <input type="text" name="inputABinary" id="inputABinary" readonly>
+            </label>
+          </label>
+          <br>
+          <label for="inputB">
+            Input B
+            <label for="inputBDecimal">
+              Decimal
+              <input type="number" name="inputBDecimal" id="inpuBDecimal">
+            </label>
+            <label for="inputABinary">
+              Binary
+              <input type="text" name="inputBBinary" id="IputBBinary" readonly>
+            </label>
+          </label>
+          <br>
+          <label for="output">
+            Output
+            <label for="outputDecimal">
+              Decimal
+              <input type="number" name="outputDecimal" id="outputDecimal" readonly />
+            </label>
+            <label for="outputBinary">
+              Binary
+              <input type="text" name="outputBinary" id="outputBinary" readonly />
+            </label>
+          </label>
+          <br>
+          <label for="carryOut">
+            Carry Out
+            <input type="text" name="carryOut" id="carryOut">
+          </label>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <div id="adderContainer">
+        <div id="inputAContainer" class="inputContainer">
+          <p>0</p>
+          <p>0</p>
+          <p>0</p>
+          <p>0</p>
+        </div>
+
+        <div id="inputBContainer" class="inputContainer">
+          <p>0</p>
+          <p>0</p>
+          <p>0</p>
+          <p>0</p>
+        </div>
+
+        <div id="adder">
+          <div>
+            <p>Input A<br> 0</p>
+            <p>Input B<br> 0</p>
+            <p>Carry In<br> 0</p>
+            <p>Output<br> 0</p>
+            <p>Carry Out<br> 0</p>
+          </div>
+          <div>
+            <p>Input A<br> 0</p>
+            <p>Input B<br> 0</p>
+            <p>Carry In<br> 0</p>
+            <p>Output<br> 0</p>
+            <p>Carry Out<br> 0</p>
+          </div>
+          <div>
+            <p>Input A<br> 0</p>
+            <p>Input B<br> 0</p>
+            <p>Carry In<br> 0</p>
+            <p>Output<br> 0</p>
+            <p>Carry Out<br> 0</p>
+          </div>
+          <div>
+            <p>Input A<br> 0</p>
+            <p>Input B<br> 0</p>
+            <p>Carry In<br> 0</p>
+            <p>Output<br> 0</p>
+            <p>Carry Out<br> 0</p>
+          </div>
+        </div>
+
+        <div id="outputContainer">
+          <div>
+            <p>0</p>
+          </div>
+          <div>
+            <p>0</p>
+            <p>0</p>
+            <p>0</p>
+            <p>0</p>
+          </div>
+        </div>
+
+        <div id="inputAbit1ToAdder1InputAPart1" class="fromInputAPart1"></div>
+        <div id="inputAbit1ToAdder1InputAPart2" class="fromInputAPart2"></div>
+
+        <div id="inputBbit1ToAdder1InputBPart1" class="fromInputBPart1"></div>
+        <div id="inputBbit1ToAdder1InputBPart2" class="fromInputBPart2"></div>
+
+        <div id="inputAbit2ToAdder2InputAPart1" class="fromInputAPart1"></div>
+        <div id="inputAbit2ToAdder2InputAPart2" class="fromInputAPart2"></div>
+
+        <div id="inputBbit2ToAdder2InputBPart1" class="fromInputBPart1"></div>
+        <div id="inputBbit2ToAdder2InputBPart2" class="fromInputBPart2"></div>
+
+        <div id="inputAbit3ToAdder3InputAPart1" class="fromInputAPart1"></div>
+        <div id="inputAbit3ToAdder3InputAPart2" class="fromInputAPart2"></div>
+
+        <div id="inputBbit3ToAdder3InputBPart1" class="fromInputBPart1"></div>
+        <div id="inputBbit3ToAdder3InputBPart2" class="fromInputBPart2"></div>
+
+        <div id="inputAbit3ToAdder3InputA"></div>
+
+        <div id="inputBbit4ToAdder4InputBPart1" class="fromInputBPart1"></div>
+        <div id="inputBbit4ToAdder4InputBPart2" class="fromInputBPart2"></div>
+      </div>
+    </div>
   </div>
-  <div id="container">
-   <div id="formContainer">
-    <form id="inputForm">
-     <label for="inputA">
-      Input A:
-      <label for="inputADecimal">
-       Decimal
-       <input type="number" name="inputADecimal" id="inputADecimal">
-      </label>
-      <label for="inputABinary">
-       Binary
-       <input type="text" name="inputABinary" id="inputABinary" readonly>
-      </label>
-     </label>
-     <br>
-     <label for="inputB">
-      Input B
-      <label for="inputBDecimal">
-       Decimal
-       <input type="number" name="inputBDecimal" id="inpuBDecimal">
-      </label>
-      <label for="inputABinary">
-       Binary
-       <input type="text" name="inputBBinary" id="IputBBinary" readonly>
-      </label>
-     </label>
-     <br>
-     <label for="output">
-      Output
-      <label for="outputDecimal">
-       Decimal
-       <input type="number" name="outputDecimal" id="outputDecimal" readonly />
-      </label>
-      <label for="outputBinary">
-       Binary
-       <input type="text" name="outputBinary" id="outputBinary" readonly />
-      </label>
-     </label>
-     <br>
-     <label for="carryOut">
-      Carry Out
-      <input type="text" name="carryOut" id="carryOut">
-     </label>
-     <button type="submit">Submit</button>
-    </form>
-   </div>
 
-   <div id="adderContainer">
-    <div id="inputAContainer" class="inputContainer">
-     <p>0</p>
-     <p>0</p>
-     <p>0</p>
-     <p>0</p>
-    </div>
-
-    <div id="inputBContainer" class="inputContainer">
-     <p>0</p>
-     <p>0</p>
-     <p>0</p>
-     <p>0</p>
-    </div>
-
-    <div id="adder">
-     <div>
-      <p>Input A<br> 0</p>
-      <p>Input B<br> 0</p>
-      <p>Carry In<br> 0</p>
-      <p>Output<br> 0</p>
-      <p>Carry Out<br> 0</p>
-     </div>
-     <div>
-      <p>Input A<br> 0</p>
-      <p>Input B<br> 0</p>
-      <p>Carry In<br> 0</p>
-      <p>Output<br> 0</p>
-      <p>Carry Out<br> 0</p>
-     </div>
-     <div>
-      <p>Input A<br> 0</p>
-      <p>Input B<br> 0</p>
-      <p>Carry In<br> 0</p>
-      <p>Output<br> 0</p>
-      <p>Carry Out<br> 0</p>
-     </div>
-     <div>
-      <p>Input A<br> 0</p>
-      <p>Input B<br> 0</p>
-      <p>Carry In<br> 0</p>
-      <p>Output<br> 0</p>
-      <p>Carry Out<br> 0</p>
-     </div>
-    </div>
-
-    <div id="outputContainer">
-     <div>
-      <p>0</p>
-     </div>
-     <div>
-      <p>0</p>
-      <p>0</p>
-      <p>0</p>
-      <p>0</p>
-     </div>
-    </div>
-
-    <div id="inputAbit1ToAdder1InputAPart1" class="fromInputAPart1"></div>
-    <div id="inputAbit1ToAdder1InputAPart2" class="fromInputAPart2"></div>
-
-    <div id="inputBbit1ToAdder1InputBPart1" class="fromInputBPart1"></div>
-    <div id="inputBbit1ToAdder1InputBPart2" class="fromInputBPart2"></div>
-
-    <div id="inputAbit2ToAdder2InputAPart1" class="fromInputAPart1"></div>
-    <div id="inputAbit2ToAdder2InputAPart2" class="fromInputAPart2"></div>
-
-    <div id="inputBbit2ToAdder2InputBPart1" class="fromInputBPart1"></div>
-    <div id="inputBbit2ToAdder2InputBPart2" class="fromInputBPart2"></div>
-   </div>
-  </div>
- </div>
-
- <script src="./js/logic/index.js"></script>
- <script src="./js/components/index.js"></script>
- <script src="./js/convert/index.js"></script>
- <script src="./js/index.js"></script>
+  <script src="./js/logic/index.js"></script>
+  <script src="./js/components/index.js"></script>
+  <script src="./js/convert/index.js"></script>
+  <script src="./js/index.js"></script>
 </body>
 
 </html>
