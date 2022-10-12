@@ -2,6 +2,10 @@ import { drawLine } from "../../utilities";
 import { twoInputGate } from "./gates";
 
 export default class OR extends twoInputGate {
+
+  static calculateOutput(A, B) {
+    return A || B ? 1 : 0;
+  }
   constructor(inputA, inputB) {
     super(inputA, inputB, inputA || inputB ? 1 : 0);
   }

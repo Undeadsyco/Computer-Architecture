@@ -4,8 +4,14 @@ import AND from './ANDgate';
 import OR from './ORgate';
 
 export default class XOR extends twoInputGate {
+
+  static calculateOutput(A, B) {
+    return (A && !B) || (!A && B) ? 1 : 0;
+  }
+
   constructor(inputA, inputB) {
     super(inputA, inputB, (inputA && !inputB) || (!inputA && inputB) ? 1 : 0);
+    this.outline = false;
   }
 
   render(parent) {
@@ -19,12 +25,14 @@ export default class XOR extends twoInputGate {
     this.draw(ctx, canvas.width * 0.5, canvas.height * 0.5);
   }
 
-  draw(ctx, x, y, width = 400, height = 192) {
-    ctx.beginPath();
-    ctx.rect(x - (width * 0.5), y - (height * 0.5), width, height);
-    ctx.stroke();
+  draw(ctx, x, y, width = 400, height = 200) {
+    if (this.outline) {
+      ctx.beginPath();
+      ctx.rect(x - (width * 0.5), y - (height * 0.5), width, height);
+      ctx.stroke();
+    }
 
-    const xStart = width * 0.8, yStart = height * 0.5;
+    const xStart = x + (width * 0.3), yStart = y;
 
     const notGate1 = new NOT(this.inputB);
     notGate1.draw(ctx, xStart - (110 * 2), yStart - 35);
@@ -41,6 +49,7 @@ export default class XOR extends twoInputGate {
 
     ctx.strokeStyle = 'black';
     ctx.beginPath();
+    // TODO change drawing code to drawline function calls
     // draw line from NOTgate 1 output to ANDgate 1 inputB
     if (notGate1.output === 1) ctx.strokeStyle = 'red';
     else ctx.strokeStyle = 'black';
@@ -121,9 +130,11 @@ export default class XOR extends twoInputGate {
     ctx.lineTo(orGate.inputPositions.output.x + 20, orGate.inputPositions.output.y);
     ctx.stroke();
 
-    ctx.fillText(this.inputA, x - (width * 0.5), y - (height * 0.25) + 6);
-    ctx.fillText(this.inputB, x - (width * 0.5), y + (height * 0.25) + 6);
-    ctx.fillText(this.output, x + (width * 0.5) - 10, y + 6);
+    if (this.outline) {
+      ctx.fillText(this.inputA, x - (width * 0.5), y - (height * 0.25) + 6);
+      ctx.fillText(this.inputB, x - (width * 0.5), y + (height * 0.25) + 6);
+      ctx.fillText(this.output, x + (width * 0.5) - 10, y + 6);
+    }
 
     this.inputPositions = {
       inputA: { X: undefined, y: undefined },

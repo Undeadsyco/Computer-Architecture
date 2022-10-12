@@ -1,6 +1,10 @@
 import { singleInputGate } from "./gates";
 
 export default class NOT extends singleInputGate {
+
+  static invert(input) {
+    return input === 1 ? 0 : 1;
+  }
   constructor(input) {
     super(input, input ? 0 : 1);
   }
@@ -19,6 +23,7 @@ export default class NOT extends singleInputGate {
     this.draw(ctx, canvas.width, canvas.height, (canvas.width * 0.33) - 2);
   }
 
+  // TODO add draw line function calls
   draw(ctx, xStart, yStart, width = 100, height = 60) {
     const offset = 15;
     ctx.beginPath();

@@ -2,6 +2,11 @@ import { twoInputGate } from "./gates";
 import { drawLine } from "../../utilities";
 
 export default class AND extends twoInputGate {
+
+  static calculateOutput(A, B) {
+    return A && B ? 1 : 0;
+  }
+  
   constructor(inputA, inputB, x, y) {
     super(inputA, inputB, inputA && inputB ? 1 : 0);
     this.x = x;
@@ -55,7 +60,7 @@ export default class AND extends twoInputGate {
     // // draw output line 
     drawLine(ctx, this.output, [
       { x: xStart + radius, y: yStart },
-      { x: xStart + (width / 2), y: yStart}
+      { x: xStart + (width / 2), y: yStart }
     ]);
 
     this.inputPositions = {
