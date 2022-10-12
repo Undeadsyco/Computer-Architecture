@@ -1,3 +1,4 @@
+import { drawLine } from "../../utilities";
 import { twoInputGate } from "./gates";
 
 export default class OR extends twoInputGate {
@@ -27,16 +28,6 @@ export default class OR extends twoInputGate {
     ctx.lineTo(x + (width * 0.25) + 8, y);
     ctx.closePath();
 
-    // draw input line 1
-    ctx.moveTo(x - (width * 0.25) + 5, y - (height / 5));
-    ctx.lineTo(x - (width * 0.5), y - (height / 5));
-    // draw input line 2
-    ctx.moveTo(x - (width * 0.25) + 5, y + (height / 5));
-    ctx.lineTo(x - (width * 0.5), y + (height / 5));
-    // draw output line 
-    ctx.moveTo(x + (width * 0.25), y);
-    ctx.lineTo(x + (width * 0.5), y);
-
     ctx.fillStyle = 'green';
     ctx.fill();
 
@@ -46,6 +37,26 @@ export default class OR extends twoInputGate {
     ctx.fillText(this.inputB, x - (width * 0.25) + 8, y + (height / 5) + 6);
     ctx.fillText(this.output, x + (width * 0.25) - 12, y + 6);
 
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+    // draw input line 1
+    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.25) + 5, y: y - (height / 5) },
+      { x: x - (width * 0.5), y: y - (height / 5)}
+    ]);
+    // draw input line 2
+    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.25) + 5, y: y + (height / 5) },
+      { x: x - (width * 0.5), y: y + (height / 5)},
+    ]);
+    // draw output line
+    drawLine(ctx, this.output, )
+    if (this.output === 1) ctx.strokeStyle = 'red';
+    else ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.moveTo(x + (width * 0.25), y);
+    ctx.lineTo(x + (width * 0.5), y);
     ctx.stroke();
 
     this.inputPositions = {

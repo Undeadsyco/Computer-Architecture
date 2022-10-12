@@ -1,4 +1,5 @@
 import { twoInputGate } from "./gates";
+import { drawLine } from "../../utilities";
 
 export default class AND extends twoInputGate {
   constructor(inputA, inputB, x, y) {
@@ -29,15 +30,6 @@ export default class AND extends twoInputGate {
     ctx.lineTo(xStart - (width * 0.6) + radius, yStart + radius);
     ctx.lineTo(xStart - (width * 0.6) + radius, yStart - radius);
     ctx.closePath();
-    // draw input line 1
-    ctx.moveTo(xStart - (width * 0.6) + radius, yStart - radius + (height * 0.2));
-    ctx.lineTo(xStart - (width * 0.5), yStart - radius + (height * 0.2));
-    // // draw input line 2
-    ctx.moveTo(xStart - (width * 0.6) + radius, yStart + radius - (height * 0.2));
-    ctx.lineTo(xStart - (width * 0.5), yStart + radius - (height * 0.2));
-    // // draw output line 
-    ctx.moveTo(xStart + radius, yStart);
-    ctx.lineTo(xStart + (width / 2), yStart);
 
     ctx.fillStyle = 'red';
     ctx.fill();
@@ -47,9 +39,24 @@ export default class AND extends twoInputGate {
     ctx.fillText(this.inputA, xStart - (width * 0.6) + radius + 5, yStart - radius + (height * 0.2) + 6, 100);
     ctx.fillText(this.inputB, xStart - (width * 0.6) + radius + 5, yStart + radius - (height * 0.2) + 6, 100);
     ctx.fillText(this.output, xStart + radius - offset, yStart + 6, 100);
-
     ctx.strokeStyle = 'black';
     ctx.stroke();
+
+    // draw input line 1
+    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+      { x: xStart - (width * 0.6) + radius, y: yStart - radius + (height * 0.2) },
+      { x: xStart - (width * 0.5), y: yStart - radius + (height * 0.2) },
+    ]);
+    // // draw input line 2
+    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+      { x: xStart - (width * 0.6) + radius, y: yStart + radius - (height * 0.2) },
+      { x: xStart - (width * 0.5), y: yStart + radius - (height * 0.2) }
+    ]);
+    // // draw output line 
+    drawLine(ctx, this.output, [
+      { x: xStart + radius, y: yStart },
+      { x: xStart + (width / 2), y: yStart}
+    ]);
 
     this.inputPositions = {
       inputA: { x: xStart - (width * 0.5), y: yStart - radius + (height * 0.2) },
