@@ -1,10 +1,10 @@
-import { twoInputGate } from "./gates";
+import dualInputGate from "./dualInputGate";
 import NOT from './NOTgate';
 import AND from './ANDgate';
 import OR from './ORgate';
 import { drawLine } from "../../utilities";
 
-export default class XOR extends twoInputGate {
+export default class XOR extends dualInputGate {
 
   static calculateOutput(A, B) {
     return (A && !B) || (!A && B) ? 1 : 0;

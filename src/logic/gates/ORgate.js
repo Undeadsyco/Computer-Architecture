@@ -1,7 +1,7 @@
+import dualInputGate from "./dualInputGate";
 import { drawLine } from "../../utilities";
-import { twoInputGate } from "./gates";
 
-export default class OR extends twoInputGate {
+export default class OR extends dualInputGate {
 
   static calculateOutput(A, B) {
     return A || B ? 1 : 0;

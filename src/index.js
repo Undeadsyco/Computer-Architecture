@@ -16,8 +16,10 @@ canvasContainer.append(canvas);
 
 const componentList = [];
 function init() {
-  const adder = new FullAdder(0, 0, 0);
-  componentList.push(adder);
+  // const adder = new FullAdder(0, 0, 0);
+  // componentList.push(adder);
+  const and = new AND(0, 0, 200, 200);
+  componentList.push(and);
 }
 
 let animationFrame;

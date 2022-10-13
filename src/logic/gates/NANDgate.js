@@ -1,6 +1,6 @@
-import { twoInputGate } from "./gates";
+import dualInputGate from "./dualInputGate";
 
-export default class NAND extends twoInputGate {
+export default class NAND extends dualInputGate {
   constructor(inputA, inputB) {
     super(inputA, inputB, !(inputA && inputA) ? 1 : 0);
   }

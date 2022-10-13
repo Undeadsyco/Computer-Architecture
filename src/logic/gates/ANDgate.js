@@ -1,16 +1,19 @@
-import { twoInputGate } from "./gates";
+import dualInputGate from "./dualInputGate";
 import { drawLine } from "../../utilities";
 
-export default class AND extends twoInputGate {
+export default class AND extends dualInputGate {
 
   static calculateOutput(A, B) {
     return A && B ? 1 : 0;
   }
-  
+
   constructor(inputA, inputB, x, y) {
-    super(inputA, inputB, inputA && inputB ? 1 : 0);
-    this.x = x;
-    this.y = y;
+    super(inputA, inputB, AND.calculateOutput(inputA, inputB));
+    this.midPosition = { x, y };
+    this.gatePosition = [
+      { x: x - (this.width / 2), y: y - (this.height / 2) },
+      { x: x + (this.width / 2), y: y + (this.height / 2) },
+    ]
   }
 
   render(parent) {
@@ -27,46 +30,56 @@ export default class AND extends twoInputGate {
     this.draw(ctx, canvas.width, canvas.height);
   }
 
-  draw(ctx, xStart, yStart, width = 100, height = 60) {
-    const radius = (width * 0.33) - 2, offset = 15;
-    ctx.beginPath();
+  draw(ctx) {
+    const radius = (this.width * 0.33) - 2;
+    this.drawGate(ctx, radius);
+    this.drawOutline(ctx, radius);
+
+    this.inputPositions = [
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - radius + (this.height * 0.2) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + radius - (this.height * 0.2) },
+    ];
+    this.outputPosition = { x: this.midPosition.x + (this.width / 2), y: this.midPosition.y };
+  }
+
+  drawGate(ctx, radius) {
     // draw front arc
-    ctx.arc(xStart, yStart, radius, Math.PI * 1.5, Math.PI * 0.5, false);
-    ctx.lineTo(xStart - (width * 0.6) + radius, yStart + radius);
-    ctx.lineTo(xStart - (width * 0.6) + radius, yStart - radius);
+    ctx.beginPath();
+    ctx.arc(this.midPosition.x, this.midPosition.y, radius, Math.PI * 1.5, Math.PI * 0.5, false);
+    ctx.lineTo(this.midPosition.x - (this.width * 0.6) + radius, this.midPosition.y + radius);
+    ctx.lineTo(this.midPosition.x - (this.width * 0.6) + radius, this.midPosition.y - radius);
     ctx.closePath();
 
     ctx.fillStyle = 'red';
     ctx.fill();
-
-    ctx.font = 'bold 20px serif';
-    ctx.fillStyle = 'black';
-    ctx.fillText(this.inputA, xStart - (width * 0.6) + radius + 5, yStart - radius + (height * 0.2) + 6, 100);
-    ctx.fillText(this.inputB, xStart - (width * 0.6) + radius + 5, yStart + radius - (height * 0.2) + 6, 100);
-    ctx.fillText(this.output, xStart + radius - offset, yStart + 6, 100);
     ctx.strokeStyle = 'black';
     ctx.stroke();
 
-    // draw input line 1
     drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
-      { x: xStart - (width * 0.6) + radius, y: yStart - radius + (height * 0.2) },
-      { x: xStart - (width * 0.5), y: yStart - radius + (height * 0.2) },
+      { x: this.midPosition.x - (this.width * 0.6) + radius, y: this.midPosition.y - radius + (this.height * 0.2) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - radius + (this.height * 0.2) },
     ]);
     // // draw input line 2
     drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
-      { x: xStart - (width * 0.6) + radius, y: yStart + radius - (height * 0.2) },
-      { x: xStart - (width * 0.5), y: yStart + radius - (height * 0.2) }
+      { x: this.midPosition.x - (this.width * 0.6) + radius, y: this.midPosition.y + radius - (this.height * 0.2) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + radius - (this.height * 0.2) }
     ]);
     // // draw output line 
     drawLine(ctx, this.output, [
-      { x: xStart + radius, y: yStart },
-      { x: xStart + (width / 2), y: yStart }
+      { x: this.midPosition.x + radius, y: this.midPosition.y },
+      { x: this.midPosition.x + (this.width / 2), y: this.midPosition.y }
     ]);
+  }
 
-    this.inputPositions = {
-      inputA: { x: xStart - (width * 0.5), y: yStart - radius + (height * 0.2) },
-      inputB: { x: xStart - (width * 0.5), y: yStart + radius - (height * 0.2) },
-      output: { x: xStart + (width / 2), y: yStart }
-    }
+
+
+  drawOutline(ctx, radius) {
+    ctx.font = 'bold 20px serif';
+    ctx.fillStyle = 'black';
+    ctx.fillText(this.inputA, this.inputPositions[0].x - 10, this.inputPositions[0].y + 6);
+    ctx.fillText(this.inputB, this.inputPositions[1].x - 10, this.inputPositions[1].y + 6);
+    ctx.fillText(this.output, this.outputPosition.x, this.outputPosition.y + 6);
+
+    
   }
 }

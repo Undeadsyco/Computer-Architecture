@@ -1,5 +1,5 @@
 import { drawLine } from "../../utilities";
-import { singleInputGate } from "./gates";
+import singleInputGate from "./singleInputGate";
 
 export default class NOT extends singleInputGate {
 
