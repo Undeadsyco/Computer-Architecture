@@ -55,13 +55,10 @@ export default class OR extends twoInputGate {
       { x: x - (width * 0.5), y: y + (height / 5)},
     ]);
     // draw output line
-    drawLine(ctx, this.output, )
-    if (this.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(x + (width * 0.25), y);
-    ctx.lineTo(x + (width * 0.5), y);
-    ctx.stroke();
+    drawLine(ctx, this.output, [
+      { x: x + (width * 0.25), y },
+      { x: x + (width * 0.5), y },
+    ]);
 
     this.inputPositions = {
       inputA: { x: x - (width * 0.5), y: y - (height / 5) },

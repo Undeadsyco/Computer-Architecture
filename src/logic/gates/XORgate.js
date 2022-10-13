@@ -2,6 +2,7 @@ import { twoInputGate } from "./gates";
 import NOT from './NOTgate';
 import AND from './ANDgate';
 import OR from './ORgate';
+import { drawLine } from "../../utilities";
 
 export default class XOR extends twoInputGate {
 
@@ -48,87 +49,68 @@ export default class XOR extends twoInputGate {
     orGate.draw(ctx, xStart, yStart);
 
     ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    // TODO change drawing code to drawline function calls
+    
     // draw line from NOTgate 1 output to ANDgate 1 inputB
-    if (notGate1.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(notGate1.inputPositions.output.x, notGate1.inputPositions.output.y);
-    ctx.lineTo(andGate1.inputPositions.inputB.x, andGate1.inputPositions.inputB.y);
-    ctx.stroke();
+    drawLine(ctx, notGate1.output === 1 ? 'red' : 'black', [
+      { x: notGate1.inputPositions.output.x, y: notGate1.inputPositions.output.y },
+      { x: andGate1.inputPositions.inputB.x, y: andGate1.inputPositions.inputB.y },
+    ]);
 
     // draw line from NOTgate 2 output to ANDgate 2 inputA
-    if (notGate2.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(notGate2.inputPositions.output.x, notGate2.inputPositions.output.y);
-    ctx.lineTo(andGate2.inputPositions.inputA.x, andGate2.inputPositions.inputA.y);
-    ctx.stroke();
+    drawLine(ctx, notGate2.output === 1 ? 'red' : 'black', [
+      { x: notGate2.inputPositions.output.x, y: notGate2.inputPositions.output.y },
+      { x: andGate2.inputPositions.inputA.x, y: andGate2.inputPositions.inputA.y },
+    ]);
 
     // draw line from ANDgate 1 output to ORgate inputA
-    if (andGate1.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(andGate1.inputPositions.output.x, andGate1.inputPositions.output.y);
-    ctx.lineTo(orGate.inputPositions.inputA.x, orGate.inputPositions.inputA.y);
-    ctx.stroke();
+    drawLine(ctx, andGate1.output === 1 ? 'red' : 'black', [
+      { x: andGate1.inputPositions.output.x, y: andGate1.inputPositions.output.y },
+      { x: orGate.inputPositions.inputA.x, y: orGate.inputPositions.inputA.y },
+    ]);
 
     // draw line from ANDgate 2 output to ORgate inputB
-    if (andGate2.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(andGate2.inputPositions.output.x, andGate2.inputPositions.output.y);
-    ctx.lineTo(orGate.inputPositions.inputB.x, orGate.inputPositions.inputB.y);
-    ctx.stroke();
+    drawLine(ctx, andGate2.output === 1 ? 'red' : 'black', [
+      { x: andGate2.inputPositions.output.x, y: andGate2.inputPositions.output.y },
+      { x: orGate.inputPositions.inputB.x, y: orGate.inputPositions.inputB.y },
+    ]);
 
     // draw line from inputA to ANDgate 1 inputA
-    if (this.inputA === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(x - (width * 0.5) + 20, y - (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 20, y - (height * 0.4));
-    ctx.lineTo(andGate1.inputPositions.inputA.x, y - (height * 0.4));
-    ctx.lineTo(andGate1.inputPositions.inputA.x, andGate1.inputPositions.inputA.y);
-    ctx.stroke();
+    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.5) + 20, y: y - (height * 0.25) },
+      { x: x - (width * 0.5) + 20, y: y - (height * 0.4) },
+      { x: andGate1.inputPositions.inputA.x, y: y - (height * 0.4) },
+      { x: andGate1.inputPositions.inputA.x, y: andGate1.inputPositions.inputA.y },
+    ]);
 
     // draw line from inputA to NOTgate 2 input
-    if (this.inputA === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(x - (width * 0.5) + 10, y - (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 30, y - (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 30, notGate2.inputPositions.input.y);
-    ctx.lineTo(notGate2.inputPositions.input.x, notGate2.inputPositions.input.y);
-    ctx.stroke();
+    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.5) + 10, y: y - (height * 0.25) },
+      { x: x - (width * 0.5) + 30, y: y - (height * 0.25) },
+      { x: x - (width * 0.5) + 30, y: notGate2.inputPositions.input.y },
+      { x: notGate2.inputPositions.input.x, y: notGate2.inputPositions.input.y },
+    ]);
 
     // draw line from inputB to ANDgate 2 inputB
-    if (this.inputB === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(x - (width * 0.5) + 10, y + (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 30, y + (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 30, y + (height * 0.4));
-    ctx.lineTo(andGate2.inputPositions.inputB.x, y + (height * 0.4));
-    ctx.lineTo(andGate2.inputPositions.inputB.x, andGate2.inputPositions.inputB.y);
-    ctx.stroke();
+    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.5) + 10, y: y + (height * 0.25) },
+      { x: x - (width * 0.5) + 30, y: y + (height * 0.25) },
+      { x: x - (width * 0.5) + 30, y: y + (height * 0.4) },
+      { x: andGate2.inputPositions.inputB.x, y: y + (height * 0.4) },
+      { x: andGate2.inputPositions.inputB.x, y: andGate2.inputPositions.inputB.y },
+    ]);
 
     // draw line from inputB to NOTgate 1 input
-    if (this.inputB === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(x - (width * 0.5) + 20, y + (height * 0.25));
-    ctx.lineTo(x - (width * 0.5) + 20, notGate1.inputPositions.input.y);
-    ctx.lineTo(notGate1.inputPositions.input.x, notGate1.inputPositions.input.y);
-    ctx.stroke();
+    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+      { x: x - (width * 0.5) + 20, y: y + (height * 0.25) },
+      { x: x - (width * 0.5) + 20, y: notGate1.inputPositions.input.y },
+      { x: notGate1.inputPositions.input.x, y: notGate1.inputPositions.input.y },
+    ]);
 
     // draw line from ORgate output to output
-    if (this.output === 1) ctx.strokeStyle = 'red';
-    else ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(orGate.inputPositions.output.x, orGate.inputPositions.output.y);
-    ctx.lineTo(orGate.inputPositions.output.x + 20, orGate.inputPositions.output.y);
-    ctx.stroke();
+    drawLine(ctx, this.output === 1 ? 'red' : 'black', [
+      { x: orGate.inputPositions.output.x, y: orGate.inputPositions.output.y },
+      { x: orGate.inputPositions.output.x + 20, y: orGate.inputPositions.output.y },
+    ]);
 
     if (this.outline) {
       ctx.fillText(this.inputA, x - (width * 0.5), y - (height * 0.25) + 6);

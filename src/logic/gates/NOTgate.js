@@ -1,3 +1,4 @@
+import { drawLine } from "../../utilities";
 import { singleInputGate } from "./gates";
 
 export default class NOT extends singleInputGate {
@@ -23,9 +24,10 @@ export default class NOT extends singleInputGate {
     this.draw(ctx, canvas.width, canvas.height, (canvas.width * 0.33) - 2);
   }
 
-  // TODO add draw line function calls
   draw(ctx, xStart, yStart, width = 100, height = 60) {
     const offset = 15;
+
+    // TODO create and implement drawPolygon fuction
     ctx.beginPath();
     ctx.moveTo(xStart - (width * 0.25), yStart);
     ctx.lineTo(xStart - (width * 0.25), yStart - (height * 0.5));
@@ -33,21 +35,27 @@ export default class NOT extends singleInputGate {
     ctx.lineTo(xStart - (width * 0.25), yStart + (height * 0.5));
     ctx.closePath();
 
-    ctx.moveTo(xStart - (width * 0.25), yStart);
-    ctx.lineTo(xStart - (width * 0.5), yStart);
-
-    ctx.moveTo(xStart + (width * 0.25), yStart);
-    ctx.lineTo(xStart + (width * 0.5), yStart);
-
     ctx.fillStyle = 'blue';
     ctx.fill();
 
     ctx.font = 'bold 20px serif';
     ctx.fillStyle = 'black';
-    ctx.fillText(this._input, xStart - (width * 0.25) + 5, yStart + 6);
-    ctx.fillText(this._output, xStart + (width * 0.25) - offset, yStart + 6);
+    ctx.fillText(this.input, xStart - (width * 0.25) + 5, yStart + 6);
+    ctx.fillText(this.output, xStart + (width * 0.25) - offset, yStart + 6);
 
     ctx.stroke();
+
+    // draw input line
+    drawLine(ctx, this.input === 1 ? 'red' : 'black', [
+      { x: xStart - (width * 0.25), y: yStart },
+      { x: xStart - (width * 0.5), y: yStart },
+    ]);
+
+    // draw output line
+    drawLine(ctx, this.output === 1 ? 'red' : 'black', [
+      { x: xStart + (width * 0.25), y: yStart },
+      { x: xStart + (width * 0.5), y: yStart },
+    ]);
 
     this.inputPositions = {
       input: { x: xStart - (width * 0.5), y: yStart },
