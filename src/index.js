@@ -5,7 +5,7 @@
  */
 
 import { FullAdder } from './logic/components/FullAdder';
-import { AND, XOR, OR } from './logic/gates';
+import { AND, XOR, OR, NOT } from './logic/gates';
 
 const _01Test = /^[0-1]*$/;
 
@@ -20,7 +20,7 @@ const componentList = [];
 function init() {
   // const adder = new FullAdder(0, 0, 0);
   // componentList.push(adder);
-  const gate = new OR(0, 0, 200, 200);
+  const gate = new NOT(0, 200, 200);
   gate.toggleOutline();
   componentList.push(gate);
 }

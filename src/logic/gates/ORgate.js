@@ -7,7 +7,7 @@ export default class OR extends dualInputGate {
     return A || B ? 1 : 0;
   }
   constructor(inputA, inputB, x, y) {
-    super(inputA, inputB, inputA || inputB ? 1 : 0);
+    super(inputA, inputB, OR.calculateOutput(inputA, inputB));
     this.midPosition = { x, y };
     this.gatePosition = [
       { x: x - (this.width / 2), y: y - (this.height / 2) },
@@ -23,7 +23,7 @@ export default class OR extends dualInputGate {
     canvas.setAttribute('style', 'border: 2px solid black;');
 
     this.x = (canvas.width * .5);
-    this.y = canvas.height / 2;
+    this.y = (canvas.height / 2);
 
     parent.append(canvas);
     this.draw(ctx, canvas.width, canvas.height);
@@ -77,7 +77,8 @@ export default class OR extends dualInputGate {
     ctx.fillText(this.inputB, this.inputPositions[1].x - 10, this.inputPositions[1].y + 6);
     ctx.fillText(this.output, this.outputPosition.x, this.outputPosition.y + 6);
 
-    ctx.rect(this.midPosition.x - this.width / 2, this.midPosition.y - this.height / 2, this.width, this.height);
+    ctx.rect(this.gatePosition[0].x, this.gatePosition[0].y, this.gatePosition[1].x, this.gatePosition[1].y);
+    ctx.strokeStyle = 'black';
     ctx.stroke();
   }
 }
