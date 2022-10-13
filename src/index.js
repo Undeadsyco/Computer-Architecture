@@ -1,3 +1,5 @@
+// TODO: create server
+
 /**
  * @typedef {(number|boolean)} boolLike
  */
@@ -18,9 +20,9 @@ const componentList = [];
 function init() {
   // const adder = new FullAdder(0, 0, 0);
   // componentList.push(adder);
-  const and = new AND(0, 0, 200, 200);
-  // and.toggleOutline();
-  componentList.push(and);
+  const gate = new OR(0, 0, 200, 200);
+  gate.toggleOutline();
+  componentList.push(gate);
 }
 
 let animationFrame;

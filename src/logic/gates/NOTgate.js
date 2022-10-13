@@ -27,7 +27,6 @@ export default class NOT extends singleInputGate {
   draw(ctx, xStart, yStart, width = 100, height = 60) {
     const offset = 15;
 
-    // TODO create and implement drawPolygon fuction
     ctx.beginPath();
     ctx.moveTo(xStart - (width * 0.25), yStart);
     ctx.lineTo(xStart - (width * 0.25), yStart - (height * 0.5));
