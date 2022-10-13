@@ -19,9 +19,11 @@ export const drawLine = (ctx, color = 'black', cords = []) => {
   ctx.stroke();
 }
 
-export const drawPolygon = (ctx, cords = [], options = { lineColor: 'black', fillColor: 'white' }) => {
+export const drawPolygon = (ctx, sides, radius, options = { lineColor: 'black', fillColor: 'white' }) => {
   ctx.strokeStyle = options.lineColor;
   ctx.fillStyle = options.fillColor;
+
+  const cords = [];
 
   ctx.beginPath();
   cords.forEach(({ x, y }) => {

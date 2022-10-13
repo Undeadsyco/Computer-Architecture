@@ -114,6 +114,11 @@ export default class dualInputGate {
     this.#outputPosition = cordinates;
   }
 
+  /** @return {boolean} */
+  get outline() {
+    return this.#outline;
+  }
+
   toggleOutline() {
     this.#outline = !this.#outline;
   }
