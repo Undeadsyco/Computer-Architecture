@@ -12,7 +12,9 @@ export default class NOT extends SingleInputGate {
     this.gatePosition = [
       { x: x - (this.width / 2), y: y - (this.height / 2) },
       { x: this.width, y: this.height },
-    ]
+    ];
+    this.inputPosition = { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y }
+    this.outputPosition = { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y };
   }
 
   render(parent) {
@@ -44,9 +46,6 @@ export default class NOT extends SingleInputGate {
   draw(ctx) {
     this.#drawGate(ctx);
     if (this.outline) this.#drawOutline(ctx);
-
-    this.inputPosition = { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y }
-    this.outputPosition = { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y };
   }
 
   #drawGate(ctx) {

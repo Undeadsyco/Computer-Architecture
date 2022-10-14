@@ -4,9 +4,9 @@
  * @typedef {(number|boolean)} boolLike
  */
 
-import { FullAdder } from './logic/components';
-import { XOR } from './logic/gates/ComplexGates';
-import { AND, OR } from './logic/gates/SimpleGates';
+import { FullAdder } from './circuits/components';
+import { XOR } from './circuits/gates/ComplexGates';
+import { AND, OR } from './circuits/gates/SimpleGates';
 
 const _01Test = /^[0-1]*$/;
 
@@ -18,19 +18,22 @@ canvasContainer.append(canvas);
 
 const componentList = [];
 function init() {
-  const adder = new FullAdder(1, 1, 0, { x: 320, y: 345 });
-  componentList.push(adder);
+  // const adder = new FullAdder(1, 1, 0, { x: 320, y: 345 });
+  // componentList.push(adder);
+  // console.log(componentList);
+
+  const gate = new XOR(1, 0, 300, 200);
+  // const gate = new AND(0, 1, 200, 100);
+  const gate2 = new AND(0, 1, 200, 400);
+  // gate.toggleOutline({ interior: false });
+  // gate2.toggleOutline({ interior: false });
+  componentList.push(gate, gate2);
   componentList.forEach(component => { component.draw(ctx); });
-  console.log(componentList);
 }
 
 let animationFrame;
-let logOnce = true;
+
 function animate() {
-  if(logOnce) {
-    console.log(componentList);
-    logOnce = false;
-  }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   componentList.forEach(component => { 
@@ -51,7 +54,8 @@ document.getElementById('cancelBtn').addEventListener('click', (e) => {
 });
 document.getElementById('startBtn').addEventListener('click', (e) => {
   e.preventDefault();
-  animate();
+  
+  animationFrame = requestAnimationFrame(animate);
 });
 // TODO implement clear btn
 document.getElementById('clearBtn').addEventListener('click', (e) => {

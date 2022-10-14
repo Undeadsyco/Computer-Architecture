@@ -6,13 +6,21 @@ export default class OR extends DualInputGate {
   static calculateOutput(A, B) {
     return A || B ? 1 : 0;
   }
+
+  #radius
   constructor(inputA, inputB, x, y) {
     super(inputA, inputB, OR.calculateOutput(inputA, inputB));
+    this.#radius = (this.width * 0.35) - 2;
     this.midPosition = { x, y };
     this.gatePosition = [
       { x: x - (this.width / 2), y: y - (this.height / 2) },
       { x: this.width, y: this.height },
+    ];
+    this.inputPositions = [
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height / 5) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height / 5) },
     ]
+    this.outputPosition = { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y };
   }
 
   render(parent) {
@@ -44,21 +52,13 @@ export default class OR extends DualInputGate {
   }
 
   draw(ctx) {
-    const radius = (this.width * 0.35) - 2;
-
-    this.#drawGate(ctx, radius);
+    this.#drawGate(ctx);
     if (this.outline) this.#drawOutline(ctx);
-
-    this.inputPositions = [
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height / 5) },
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height / 5) },
-    ]
-    this.outputPosition = { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y };
   }
 
-  #drawGate(ctx, radius) {
+  #drawGate(ctx) {
     ctx.beginPath();
-    ctx.arc(this.midPosition.x - (this.width / 2), this.midPosition.y, radius, Math.PI * 1.70, Math.PI * 0.30, false);
+    ctx.arc(this.midPosition.x - (this.width / 2), this.midPosition.y, this.#radius, Math.PI * 1.70, Math.PI * 0.30, false);
     ctx.lineTo(this.midPosition.x + (this.width * 0.25) + 8, this.midPosition.y);
     ctx.closePath();
 

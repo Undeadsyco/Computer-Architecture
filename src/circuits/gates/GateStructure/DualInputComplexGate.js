@@ -5,6 +5,7 @@ import DualInputGate from "./DualInputGate";
 export default class DualInputComplexGate extends DualInputGate {
   /** @type {Array<Gate>} */ #gates = [];
   #outline = false;
+  #simplified = false;
 
   constructor(inputA, inputB, output, width, height) {
     super(inputA, inputB, output, width, height);
@@ -19,7 +20,15 @@ export default class DualInputComplexGate extends DualInputGate {
   addGates(...gates) {
     gates.forEach((gate) => {
       this.#gates.push(gate);
-    })
+    });
+  }
+
+  get simplified() {
+    return this.#simplified;
+  }
+
+  set simplified(value) {
+    this.#simplified = value;
   }
 
   toggleOutline(options = { interior: false }) {

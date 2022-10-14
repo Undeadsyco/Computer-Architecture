@@ -16,6 +16,11 @@ export default class XOR extends DualInputComplexGate {
       { x: this.width, y: this.height },
     ];
     this.#createComponentGates();
+    this.inputPositions = [
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height * 0.33) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
+    ];
+    this.outputPosition = { x: this.gates[4].outputPosition.x + (this.width * 0.05), y: this.gates[4].outputPosition.y };
   }
 
   render(parent) {
@@ -41,7 +46,7 @@ export default class XOR extends DualInputComplexGate {
     this.addGates(notGate1, notGate2, andGate1, andGate2, orGate);
     this.gates.forEach((gate) => {
       gate.updateDimentions(this.width / 5, this.height / 3);
-    })
+    });
   }
 
   #stepA = 0.0;
@@ -81,12 +86,6 @@ export default class XOR extends DualInputComplexGate {
   draw(ctx) {
     this.#drawGate(ctx);
     if (this.outline) this.#drawOutline(ctx);
-
-    this.inputPositions = [
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height * 0.33) },
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
-    ];
-    this.outputPosition = { x: this.gates[4].outputPosition.x + (this.width * 0.05), y: this.gates[4].outputPosition.y };
   }
 
   #drawGate(ctx) {
