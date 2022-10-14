@@ -73,7 +73,6 @@ export default class XOR extends DualInputComplexGate {
     if (this.gates[3].output === 1 && this.#stepG < 1) this.#stepG += 0.01;
     else if (this.#stepG > 0) this.#stepG -= 0.01;
 
-    this.draw(ctx);
     this.gates.forEach((gate) => {
       gate.update(ctx);
     });
@@ -84,8 +83,8 @@ export default class XOR extends DualInputComplexGate {
     if (this.outline) this.#drawOutline(ctx);
 
     this.inputPositions = [
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height * 0.33) },
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
     ];
     this.outputPosition = { x: this.gates[4].outputPosition.x + (this.width * 0.05), y: this.gates[4].outputPosition.y };
   }

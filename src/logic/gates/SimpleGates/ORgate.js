@@ -41,8 +41,6 @@ export default class OR extends DualInputGate {
     
     if (this.output === 1 && this.#stepC < 1) this.#stepC += 0.01;
     else if (this.#stepC > 0) this.#stepC -= 0.01;
-
-    this.draw(ctx);
   }
 
   draw(ctx) {

@@ -4,7 +4,7 @@
  * @typedef {(number|boolean)} boolLike
  */
 
-import { FullAdder } from './logic/components/FullAdder';
+import { FullAdder } from './logic/components';
 import { XOR } from './logic/gates/ComplexGates';
 import { AND, OR } from './logic/gates/SimpleGates';
 
@@ -18,13 +18,8 @@ canvasContainer.append(canvas);
 
 const componentList = [];
 function init() {
-  const XORgate1 = new XOR(0, 1, 240, 120);
-  const XORgate2 = new XOR(XORgate1.output, 0, 240, 340);
-  const ANDgate1 = new AND(0, 1, 90, 490);
-  const ANDgate2 = new AND(XORgate1.output, 0, 240, 490);
-  const ORgate = new OR(ANDgate1.output, ANDgate2.output, 390, 490);
-  componentList.push(XORgate1, XORgate2, ANDgate1, ANDgate2, ORgate);
-  // componentList.forEach(component => component.toggleOutline({ interior: true }));
+  const adder = new FullAdder(1, 1, 0, { x: 320, y: 345 });
+  componentList.push(adder);
   componentList.forEach(component => { component.draw(ctx); });
   console.log(componentList);
 }
@@ -38,7 +33,10 @@ function animate() {
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  componentList.forEach(component => { component.update(ctx); });
+  componentList.forEach(component => { 
+    component.update(ctx); 
+    component.draw(ctx); 
+  });
 
   animationFrame = requestAnimationFrame(animate);
 }
@@ -53,8 +51,6 @@ document.getElementById('cancelBtn').addEventListener('click', (e) => {
 });
 document.getElementById('startBtn').addEventListener('click', (e) => {
   e.preventDefault();
-
-  animationFrame = requestAnimationFrame(animate);
   animate();
 });
 // TODO implement clear btn
