@@ -44,6 +44,41 @@ export default class XOR extends DualInputComplexGate {
     })
   }
 
+  #stepA = 0.0;
+  #stepB = 0.0;
+  #stepC = 0.0;
+  #stepD = 0.0;
+  #stepE = 0.0;
+  #stepF = 0.0;
+  #stepG = 0.0;
+  update(ctx) {
+    if (this.inputA === 1 && this.#stepA < 1) this.#stepA += 0.01;
+    else if (this.#stepA > 0) this.#stepA -= 0.01;
+
+    if (this.inputB === 1 && this.#stepB < 1) this.#stepB += 0.01;
+    else if (this.#stepB > 0) this.#stepB -= 0.01;
+
+    if (this.output === 1 && this.#stepC < 1) this.#stepC += 0.01;
+    else if (this.#stepC > 0) this.#stepC -= 0.01;
+
+    if (this.gates[0].output === 1 && this.#stepD < 1) this.#stepD += 0.01;
+    else if (this.#stepD > 0) this.#stepD -= 0.01;
+    
+    if (this.gates[1].output === 1 && this.#stepE < 1) this.#stepE += 0.01;
+    else if (this.#stepE > 0) this.#stepE -= 0.01;
+
+    if (this.gates[2].output === 1 && this.#stepF < 1) this.#stepF += 0.01;
+    else if (this.#stepF > 0) this.#stepF -= 0.01;
+    
+    if (this.gates[3].output === 1 && this.#stepG < 1) this.#stepG += 0.01;
+    else if (this.#stepG > 0) this.#stepG -= 0.01;
+
+    this.draw(ctx);
+    this.gates.forEach((gate) => {
+      gate.update(ctx);
+    });
+  }
+
   draw(ctx) {
     this.#drawGate(ctx);
     if (this.outline) this.#drawOutline(ctx);
@@ -61,31 +96,31 @@ export default class XOR extends DualInputComplexGate {
     })
 
     // draw line from NOTgate 1 output to ANDgate 1 inputB
-    drawLine(ctx, this.gates[0].output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepD, [
       { x: this.gates[0].outputPosition.x, y: this.gates[0].outputPosition.y },
       { x: this.gates[2].inputPositions[1].x, y: this.gates[2].inputPositions[1].y },
     ]);
 
     // draw line from NOTgate 2 output to ANDgate 2 inputA
-    drawLine(ctx, this.gates[1].output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepE, [
       { x: this.gates[1].outputPosition.x, y: this.gates[1].outputPosition.y },
       { x: this.gates[3].inputPositions[0].x, y: this.gates[3].inputPositions[0].y },
     ]);
 
     // draw line from ANDgate 1 output to ORgate inputA
-    drawLine(ctx, this.gates[2].output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepF, [
       { x: this.gates[2].outputPosition.x, y: this.gates[2].outputPosition.y },
       { x: this.gates[4].inputPositions[0].x, y: this.gates[4].inputPositions[0].y },
     ]);
 
     // draw line from ANDgate 2 output to ORgate inputB
-    drawLine(ctx, this.gates[3].output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepG, [
       { x: this.gates[3].outputPosition.x, y: this.gates[3].outputPosition.y },
       { x: this.gates[4].inputPositions[1].x, y: this.gates[4].inputPositions[1].y },
     ]);
 
     // draw line from inputA to ANDgate 1 inputA
-    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepA, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 40, y: this.midPosition.y - (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 40, y: this.midPosition.y - (this.height * 0.45) },
@@ -95,7 +130,7 @@ export default class XOR extends DualInputComplexGate {
     ]);
 
     // draw line from inputA to NOTgate 2 input
-    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepA, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 40, y: this.midPosition.y - (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 40, y: this.gates[1].inputPosition.y },
@@ -103,7 +138,7 @@ export default class XOR extends DualInputComplexGate {
     ]);
 
     // draw line from inputB to ANDgate 2 inputB
-    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepB, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 20, y: this.midPosition.y + (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 20, y: this.midPosition.y + (this.height * 0.45) },
@@ -113,7 +148,7 @@ export default class XOR extends DualInputComplexGate {
     ]);
 
     // draw line from inputB to NOTgate 1 input
-    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepB, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 20, y: this.midPosition.y + (this.height * 0.33) },
       { x: this.midPosition.x - (this.width * 0.5) + 20, y: this.gates[0].inputPosition.y },
@@ -121,7 +156,7 @@ export default class XOR extends DualInputComplexGate {
     ]);
 
     // draw line from ORgate output to output
-    drawLine(ctx, this.output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepC, [
       { x: this.gates[4].outputPosition.x, y: this.gates[4].outputPosition.y },
       { x: this.gates[4].outputPosition.x + (this.width * 0.05), y: this.gates[4].outputPosition.y },
     ]);

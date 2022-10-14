@@ -55,6 +55,11 @@ export default class Gate {
     return this.#outline;
   }
 
+  /** @param {boolean} value */
+  set outline(value) {
+    this.#outline = value;
+  }
+
   toggleOutline() {
     this.#outline = !this.#outline;
   }

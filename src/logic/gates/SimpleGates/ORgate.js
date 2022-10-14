@@ -29,6 +29,22 @@ export default class OR extends DualInputGate {
     this.draw(ctx, canvas.width, canvas.height);
   }
 
+  #stepA = 0.0;
+  #stepB = 0.0;
+  #stepC = 0.0;
+  update(ctx) {
+    if (this.inputA === 1 && this.#stepA < 1) this.#stepA += 0.01;
+    else if (this.#stepA > 0) this.#stepA -= 0.01;
+    
+    if (this.inputB === 1 && this.#stepB < 1) this.#stepB += 0.01;
+    else if (this.#stepB > 0) this.#stepB -= 0.01;
+    
+    if (this.output === 1 && this.#stepC < 1) this.#stepC += 0.01;
+    else if (this.#stepC > 0) this.#stepC -= 0.01;
+
+    this.draw(ctx);
+  }
+
   draw(ctx) {
     const radius = (this.width * 0.35) - 2;
 
@@ -54,17 +70,17 @@ export default class OR extends DualInputGate {
     ctx.strokeStyle = 'black';
     ctx.stroke();
 
-    drawLine(ctx, this.inputA === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepA, [
+      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height / 5) },
       { x: this.midPosition.x - (this.width * 0.25) + 5, y: this.midPosition.y - (this.height / 5) },
-      { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y - (this.height / 5) }
     ]);
     // draw input line 2
-    drawLine(ctx, this.inputB === 1 ? 'red' : 'black', [
-      { x: this.midPosition.x - (this.width * 0.25) + 5, y: this.midPosition.y + (this.height / 5) },
+    drawLine(ctx, this.#stepB, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + (this.height / 5) },
+      { x: this.midPosition.x - (this.width * 0.25) + 5, y: this.midPosition.y + (this.height / 5) },
     ]);
     // draw output line
-    drawLine(ctx, this.output, [
+    drawLine(ctx, this.#stepC, [
       { x: this.midPosition.x + (this.width * 0.25), y: this.midPosition.y },
       { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y },
     ]);

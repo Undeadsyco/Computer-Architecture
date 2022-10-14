@@ -29,6 +29,18 @@ export default class NOT extends SingleInputGate {
     this.draw(ctx, canvas.width, canvas.height, (canvas.width * 0.33) - 2);
   }
 
+  #stepA = 0.0;
+  #stepB = 0.0;
+  update(ctx) {
+    if (this.input === 1 && this.#stepA < 1) this.#stepA += 0.01;
+    else if (this.#stepA > 0) this.#stepA -= 0.01;
+
+    if (this.output === 1 && this.#stepB < 1) this.#stepB += 0.01;
+    else if (this.#stepB > 0) this.#stepB -= 0.01
+
+    this.draw(ctx);
+  }
+
   draw(ctx) {
     this.#drawGate(ctx);
     if (this.outline) this.#drawOutline(ctx);
@@ -40,7 +52,7 @@ export default class NOT extends SingleInputGate {
   #drawGate(ctx) {
     ctx.fillStyle = 'blue';
     ctx.strokeStyle = 'black';
-    
+
     ctx.beginPath();
     ctx.moveTo(this.midPosition.x - (this.width * 0.25), this.midPosition.y);
     ctx.lineTo(this.midPosition.x - (this.width * 0.25), this.midPosition.y - (this.height * 0.5));
@@ -52,13 +64,13 @@ export default class NOT extends SingleInputGate {
     ctx.stroke();
 
     // draw input line
-    drawLine(ctx, this.input === 1 ? 'red' : 'black', [
-      { x: this.midPosition.x - (this.width * 0.25), y: this.midPosition.y },
+    drawLine(ctx, this.#stepA, [
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y },
+      { x: this.midPosition.x - (this.width * 0.25), y: this.midPosition.y },
     ]);
 
     // draw output line
-    drawLine(ctx, this.output === 1 ? 'red' : 'black', [
+    drawLine(ctx, this.#stepB, [
       { x: this.midPosition.x + (this.width * 0.25), y: this.midPosition.y },
       { x: this.midPosition.x + (this.width * 0.5), y: this.midPosition.y },
     ]);
