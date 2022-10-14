@@ -1,7 +1,7 @@
-import dualInputGate from "./dualInputGate";
-import { drawLine } from "../../utilities";
+import { DualInputGate } from "../GateStructure";
+import { drawLine } from "../../../utilities";
 
-export default class OR extends dualInputGate {
+export default class OR extends DualInputGate {
 
   static calculateOutput(A, B) {
     return A || B ? 1 : 0;
@@ -29,7 +29,7 @@ export default class OR extends dualInputGate {
     this.draw(ctx, canvas.width, canvas.height);
   }
 
-  draw(ctx, x, y, width = 100, height = 60) {
+  draw(ctx) {
     const radius = (this.width * 0.35) - 2;
 
     this.#drawGate(ctx, radius);
@@ -77,6 +77,7 @@ export default class OR extends dualInputGate {
     ctx.fillText(this.inputB, this.inputPositions[1].x - 10, this.inputPositions[1].y + 6);
     ctx.fillText(this.output, this.outputPosition.x, this.outputPosition.y + 6);
 
+    ctx.beginPath();
     ctx.rect(this.gatePosition[0].x, this.gatePosition[0].y, this.gatePosition[1].x, this.gatePosition[1].y);
     ctx.strokeStyle = 'black';
     ctx.stroke();

@@ -5,7 +5,8 @@
  */
 
 import { FullAdder } from './logic/components/FullAdder';
-import { AND, XOR, OR, NOT } from './logic/gates';
+import { XOR } from './logic/gates/ComplexGates';
+import { AND } from './logic/gates/SimpleGates';
 
 const _01Test = /^[0-1]*$/;
 
@@ -20,9 +21,10 @@ const componentList = [];
 function init() {
   // const adder = new FullAdder(0, 0, 0);
   // componentList.push(adder);
-  const gate = new NOT(0, 200, 200);
-  gate.toggleOutline();
-  componentList.push(gate);
+  const gate = new XOR(0, 1, 260, 130);
+  const gate2 = new XOR(0, 1, 260, 360);
+  componentList.push(gate, gate2);
+  console.log('gate', gate, 'gate2', gate);
 }
 
 let animationFrame;
@@ -31,6 +33,7 @@ function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   componentList[0].draw(ctx);
+  componentList[1].draw(ctx);
 
   animationFrame = requestAnimationFrame(animate);
 }

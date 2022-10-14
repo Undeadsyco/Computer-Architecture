@@ -1,7 +1,7 @@
-import { drawLine } from "../../utilities";
-import singleInputGate from "./singleInputGate";
+import { SingleInputGate } from "../GateStructure";
+import { drawLine } from "../../../utilities";
 
-export default class NOT extends singleInputGate {
+export default class NOT extends SingleInputGate {
 
   static invert(input) {
     return input === 1 ? 0 : 1;
@@ -38,6 +38,9 @@ export default class NOT extends singleInputGate {
   }
 
   #drawGate(ctx) {
+    ctx.fillStyle = 'blue';
+    ctx.strokeStyle = 'black';
+    
     ctx.beginPath();
     ctx.moveTo(this.midPosition.x - (this.width * 0.25), this.midPosition.y);
     ctx.lineTo(this.midPosition.x - (this.width * 0.25), this.midPosition.y - (this.height * 0.5));
@@ -45,10 +48,7 @@ export default class NOT extends singleInputGate {
     ctx.lineTo(this.midPosition.x - (this.width * 0.25), this.midPosition.y + (this.height * 0.5));
     ctx.closePath();
 
-    ctx.fillStyle = 'blue';
     ctx.fill();
-
-    ctx.strokeStyle = 'black';
     ctx.stroke();
 
     // draw input line
@@ -65,15 +65,14 @@ export default class NOT extends singleInputGate {
   }
 
   #drawOutline(ctx) {
-    const offset = 15;
-
     ctx.font = 'bold 20px serif';
     ctx.fillStyle = 'black';
     ctx.fillText(this.input, this.inputPosition.x - 10, this.inputPosition.y + 6);
     ctx.fillText(this.output, this.outputPosition.x, this.outputPosition.y + 6);
 
-    ctx.rect(this.gatePosition[0].x, this.gatePosition[0].y, this.gatePosition[1].x, this.gatePosition[1].y);
     ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.rect(this.gatePosition[0].x, this.gatePosition[0].y, this.gatePosition[1].x, this.gatePosition[1].y);
     ctx.stroke();
   }
 }

@@ -1,5 +1,6 @@
 import { drawLine } from "../../utilities";
-import { XOR, AND, OR } from "../gates";
+import { AND, OR } from "../gates/SimpleGates";
+import { XOR } from "../gates/ComplexGates";
 
 export class FullAdder {
   #inputA;

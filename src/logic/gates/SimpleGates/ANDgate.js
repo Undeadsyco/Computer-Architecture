@@ -1,7 +1,7 @@
-import dualInputGate from "./dualInputGate";
-import { drawLine } from "../../utilities";
+import { DualInputGate } from "../GateStructure";
+import { drawLine } from "../../../utilities";
 
-export default class AND extends dualInputGate {
+export default class AND extends DualInputGate {
 
   static calculateOutput(A, B) {
     return A && B ? 1 : 0;
@@ -12,7 +12,7 @@ export default class AND extends dualInputGate {
     this.midPosition = { x, y };
     this.gatePosition = [
       { x: x - (this.width / 2), y: y - (this.height / 2) },
-      { x: x + (this.width / 2), y: y + (this.height / 2) },
+      { x: this.width, y: this.height },
     ]
   }
 
@@ -52,6 +52,7 @@ export default class AND extends dualInputGate {
 
     ctx.fillStyle = 'red';
     ctx.fill();
+
     ctx.strokeStyle = 'black';
     ctx.stroke();
 
@@ -65,7 +66,7 @@ export default class AND extends dualInputGate {
       { x: this.midPosition.x - (this.width * 0.5), y: this.midPosition.y + radius - (this.height * 0.2) }
     ]);
     // // draw output line 
-    drawLine(ctx, this.output, [
+    drawLine(ctx, this.output === 1 ? 'red' : 'black', [
       { x: this.midPosition.x + radius, y: this.midPosition.y },
       { x: this.midPosition.x + (this.width / 2), y: this.midPosition.y }
     ]);
@@ -73,13 +74,14 @@ export default class AND extends dualInputGate {
 
 
 
-  #drawOutline(ctx, radius) {
+  #drawOutline(ctx) {
     ctx.font = 'bold 20px serif';
     ctx.fillStyle = 'black';
     ctx.fillText(this.inputA, this.inputPositions[0].x - 10, this.inputPositions[0].y + 6);
     ctx.fillText(this.inputB, this.inputPositions[1].x - 10, this.inputPositions[1].y + 6);
     ctx.fillText(this.output, this.outputPosition.x, this.outputPosition.y + 6);
 
+    ctx.beginPath();
     ctx.rect(this.gatePosition[0].x, this.gatePosition[0].y, this.gatePosition[1].x, this.gatePosition[1].y);
     ctx.strokeStyle = 'black';
     ctx.stroke();
