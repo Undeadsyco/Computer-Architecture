@@ -27,6 +27,16 @@
     #formContainer {
       grid-row: 2/3;
       grid-column: 1/2;
+      max-height: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      grid-template-areas:
+        "a b"
+        "c d"
+        "e f"
+        "g h"
+      ;
     }
 
     #canvasContainer {
@@ -72,21 +82,7 @@
       <button id="clearBtn">Clear</button>
     </h3>
 
-    <div id="formContainer">
-      <form>
-        <label for="inputA">Input A
-          <input type="number" name="inputA" id="inputA">
-        </label>
-        <br>
-        <label for="inputB">Input B
-          <input type="number" name="inputB" id="inputB">
-        </label>
-        <br>
-        <label for="carryIn">Carry In
-          <input type="number" name="carryIn" id="carryIn">
-        </label>
-      </form>
-    </div>
+    <div id="formContainer"></div>
     <div id="canvasContainer"></div>
   </div>
 </body>
