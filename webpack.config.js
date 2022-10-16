@@ -1,4 +1,5 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BabelLoader = require('babel-loader');
 
 module.exports = {
@@ -9,19 +10,30 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        use: ['babel-loader'],
       },
       // html parsing
       {
         test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: { minimize: true },
-          },
-        ],
+        use: [{
+          loader: 'html-loader',
+          options: { minimize: true },
+        }],
+      },
+      // image parsing
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader',]
+      },
+      // css parser
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      // scss parser
+      {
+        test: /\.scss$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },
@@ -31,5 +43,9 @@ module.exports = {
       filename: './index.html',
       inject: 'body',
     }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    })
   ],
 };

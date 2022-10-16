@@ -15,6 +15,7 @@ export default class Canvas {
     Canvas.#ctx.strokeStyle = 'black', Canvas.#ctx.fillStyle = 'black', Canvas.#ctx.font = 'bold 24px serif';
     Canvas.#container.append(Canvas.#canvas);
     Canvas.#canvas.addEventListener('addSprite', (e) => {
+      console.log(e['detail']);
       Canvas.#sprites.push(e['detail']);
     });
     Canvas.#canvas.addEventListener('createDragable', (e) => {
@@ -50,12 +51,12 @@ export default class Canvas {
     Canvas.#ctx.clearRect(0, 0, Canvas.#canvas.width, Canvas.#canvas.height);
 
     Canvas.#sprites.forEach(component => {
-      // component.update(Canvas.#ctx);
+      component.update(Canvas.#ctx);
       component.draw(Canvas.#ctx);
     });
 
     if (Canvas.#dragable) {
-      Canvas.#dragable.update(Canvas.#MOUSE_POSITION.x - 325, Canvas.#MOUSE_POSITION.y - 65);
+      Canvas.#dragable.update();
       Canvas.#dragable.draw(Canvas.#ctx);
     }
 
@@ -77,6 +78,26 @@ export default class Canvas {
 
   static dispatchEvent(event) {
     Canvas.#canvas.dispatchEvent(event);
+  }
+
+  /**
+   * 
+   * @param {Array<Array<number>>} cordinates 
+   * @param {Float32Array} offset
+   */
+  static drawGradientLine(cordinates, offset) {
+    this.#ctx.beginPath();
+    const gradient = this.#ctx.createLinearGradient(cordinates[0][0], cordinates[0][1], cordinates[cordinates.length - 1][0], cordinates[cordinates.length - 1][1]);
+    gradient.addColorStop(offset < 0 ? 0 : offset > 1 ? 1 : offset, 'red');
+    gradient.addColorStop(offset < 0 ? 0 : offset > 1 ? 1 : offset, 'black');
+    this.#ctx.strokeStyle = gradient;
+
+    for(let i = 0; i < cordinates.length; i += 1) {
+      if (i === 0) this.#ctx.moveTo(cordinates[0][0], cordinates[0][1]);
+      this.#ctx.lineTo(cordinates[i][0], cordinates[i][1]);
+    }
+
+    this.#ctx.stroke();
   }
 }
 

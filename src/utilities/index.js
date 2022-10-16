@@ -10,10 +10,7 @@ export const decToBinary = (input) => {
 }
 
 export const drawLine = (ctx, step = 0, cords = []) => {
-  let gradient = ctx.createLinearGradient(cords[0].x, cords[0].y, cords[cords.length - 1].x, cords[cords.length - 1].y);
-  gradient.addColorStop(step > 1 ? 1 : step, 'red');
-  gradient.addColorStop(step > 1 ? 1 : step, 'black');
-  ctx.strokeStyle = gradient;
+  ctx.strokeStyle = 'black';
 
   ctx.beginPath();
   cords.forEach(({ x, y }, i) => {
