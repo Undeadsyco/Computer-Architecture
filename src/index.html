@@ -13,57 +13,28 @@
       box-sizing: border-box;
     }
 
-    .wrapper {
+    body {
       width: 100vw;
       height: 100vh;
-      max-width: 100vw;
-      max-height: 100vh;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 10% 90%;
-      grid-template-areas:
-        'title canvas canvas canvas'
-        'control canvas canvas canvas'
-      ;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      justify-content: center;
+      justify-items: center;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
       padding: 10px;
+      overflow: scroll;
+      border: 2px solid black;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrapper">
-    <h1>Computer Logic Circuits</h1>
-
-    <div id="formContainer">
-      <div id="gateFormBoundry">
-        <h3>Add Logic Gate</h3>
-        <form>
-          <label for="xPos">X
-            <input type="number" name="xPos" id="xPos">
-          </label>
-          <label for="yPos">Y
-            <input type="number" name="yPos" id="yPos">
-          </label>
-          <label for="inputA">A
-            <input type="number" name="inputA" id="inputA">
-          </label>
-          <label for="inputB">B
-            <input type="number" name="inputB" id="inputB">
-          </label>
-          <button type="button">NOT Gate</button>
-          <button type="button">AND Gate</button>
-          <button type="button">OR Gate</button>
-          <button type="button">XOR Gate</button>
-        </form>
-      </div>
-
-      <div>
-        <button id="startBtn">Start</button>
-        <button id="cancelBtn">Stop</button>
-        <button id="clearBtn">Clear</button>
-      </div>
-    </div>
-    <div id="canvasContainer"></div>
+  <div id="canvasContainer" class="wrapper">
   </div>
 </body>
 
