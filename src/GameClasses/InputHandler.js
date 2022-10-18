@@ -13,7 +13,9 @@ export default class InputHandler {
     });
 
     addEventListener('click', (e) => {
-      
+      if (this.#game.wireMode) {
+        
+      }
     });
 
     addEventListener('mousedown', () => {

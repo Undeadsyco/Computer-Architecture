@@ -8,6 +8,8 @@
 
 import InputHandler from "./InputHandler";
 import { Sprite } from "./sprites";
+import Input from "./sprites/circuits/Input";
+import Wire from "./sprites/circuits/Wire";
 import UI from "./UI";
 
 export default class Game {
@@ -20,6 +22,7 @@ export default class Game {
   /** @type {InputHandler} */ #inputHandler;
   /** @type {UI} */ #ui;
   /** @type {number} */ #spawnTimer = 0;
+  /** @type {boolean} */ #wireMode = false;
   
   /**
    * @param {number} width
@@ -31,6 +34,9 @@ export default class Game {
     this.#height = height;
     this.#inputHandler = new InputHandler(this);
     this.#ui = new UI(this);
+
+    this.#sprites.push();
+    this.#inputs.push();
   }
 
   update(deltaTime) {
@@ -38,14 +44,14 @@ export default class Game {
     this.#sprites.forEach(/** @type {Sprite} */ (sprite) => {
       sprite.update();
     });
-    // this.#inputs.forEach(/** @type {Input} */ (input) => {
-    //   input.update();
-    // });
+    this.#inputs.forEach(/** @type {Input} */ (input) => {
+      input.update();
+    });
 
     this.#ui.update();
 
     this.#sprites = this.#sprites.filter(/** @type {Sprite} */ (sprite) => !sprite.shouldDelete);
-    // this.#inputs = this.#inputs.filter(/** @type {Input} */ (input) => !input.shouldDelete);
+    this.#inputs = this.#inputs.filter(/** @type {Input} */ (input) => !input.shouldDelete);
   }
 
   /** @param {CanvasRenderingContext2D} ctx */
@@ -55,11 +61,12 @@ export default class Game {
     this.#sprites.forEach(/** @type {Sprite} */ (sprite) => {
       sprite.draw(ctx);
     });
-    // this.#inputs.forEach(/** @type {Input} */ (input) => {
-    //   input.draw(ctx);
-    // });
+    this.#inputs.forEach(/** @type {Input} */ (input) => {
+      input.draw(ctx);
+    });
 
     this.#ui.draw(ctx);
+    
   }
 
   /**
@@ -95,6 +102,14 @@ export default class Game {
     this.#sprites = sprites;
   }
 
+  get inputs() {
+    return this.#inputs;
+  }
+
+  set inputs(inputs) {
+    this.inputs = inputs;
+  }
+
   /** @return {pos} */
   get mousePos() {
     return this.#mousePos;
@@ -119,5 +134,13 @@ export default class Game {
 
   set spawnTimer(value) {
     this.#spawnTimer = value;
+  }
+
+  get wireMode() {
+    return this.#wireMode;
+  }
+
+  set wireMode(value) {
+    this.#wireMode = value;
   }
 }

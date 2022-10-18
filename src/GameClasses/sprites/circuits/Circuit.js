@@ -34,7 +34,7 @@ export default class Circut extends Sprite {
 
     this.#inputs = inputs;
     this.#outputs = outputs;
-    
+
     switch (`${inputs.length}`) {
       case '2':
         this.#inputStops = [0.25, 0.75];
@@ -45,7 +45,6 @@ export default class Circut extends Sprite {
       default:
         this.#inputStops = [0.5];
     }
-    console.log(outputs.length);
     switch (`${outputs.length}`) {
       case '2':
         this.#outputStops = [0.25, 0.75];
@@ -57,10 +56,10 @@ export default class Circut extends Sprite {
         this.#outputStops = [0.5];
     }
     for (let i = 0; i < inputs.length; i++) {
-      this.#inputPos.push({ x: this.pos.x, y: this.pos.y + (this.height * this.#inputStops[i])});
+      this.#inputPos.push({ x: this.pos.x, y: this.pos.y + (this.height * this.#inputStops[i]) });
     }
     for (let i = 0; i < outputs.length; i++) {
-      this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i])});
+      this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i]) });
     }
   }
 
@@ -91,7 +90,7 @@ export default class Circut extends Sprite {
   calculateInputPos() {
     this.inputPos = [];
     for (let i = 0; i < this.#inputs.length; i++) {
-      this.#inputPos.push({ x: this.pos.x, y: this.pos.y + (this.height * this.#inputStops[i])});
+      this.#inputPos.push({ x: this.pos.x, y: this.pos.y + (this.height * this.#inputStops[i]) });
     }
   }
 
@@ -101,7 +100,7 @@ export default class Circut extends Sprite {
   set showInputs(value) {
     this.#showInputs = value
   }
-  
+
   get showOutputs() {
     return this.#showOutputs;
   }
@@ -120,7 +119,7 @@ export default class Circut extends Sprite {
   calculateOutputPos() {
     this.#outputPos = [];
     for (let i = 0; i < this.#outputs.length; i++) {
-      this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i])});
+      this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i]) });
     }
   }
 
@@ -134,17 +133,27 @@ export default class Circut extends Sprite {
   draw(ctx) {
     super.draw(ctx);
 
-    if (this.#showInputs) this.#inputPos.forEach(/** @type {pos} */ (pos) => {
+    if (this.#showInputs) this.#inputPos.forEach(/** @type {pos} */(pos) => {
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
       ctx.lineTo(pos.x + (this.width * 0.25), pos.y);
       ctx.stroke();
+      if (this.game.wireMode) {
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx.stroke();
+      }
     });
-    if (this.#showOutputs) this.#outputPos.forEach(/** @type {pos} */ (pos) => {
+    if (this.#showOutputs) this.#outputPos.forEach(/** @type {pos} */(pos) => {
       ctx.beginPath();
       ctx.moveTo(this.pos.x + this.width, pos.y);
       ctx.lineTo(this.pos.x + (this.width * 0.75), pos.y);
       ctx.stroke();
+      if (this.game.wireMode) {
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx.stroke();
+      }
     });
   }
 }
