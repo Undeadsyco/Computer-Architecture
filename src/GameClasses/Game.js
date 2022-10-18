@@ -13,13 +13,13 @@ import UI from "./UI";
 export default class Game {
   /** @type {number} */ #width;
   /** @type {number} */ #height;
-  /** @type {Array<Sprite>} */ #sprites = [];
-  /** @type {Array<Input>} */ #inputs = [];
   /** @type {pos} */ #mousePos = { x: 0, y: 0 };
   /** @type {boolean} */ #mousePress = false;
-
+  /** @type {Array<Sprite>} */ #sprites = [];
+  /** @type {Array<Input>} */ #inputs = [];
   /** @type {InputHandler} */ #inputHandler;
   /** @type {UI} */ #ui;
+  /** @type {number} */ #spawnTimer = 0;
   
   /**
    * @param {number} width
@@ -33,7 +33,8 @@ export default class Game {
     this.#ui = new UI(this);
   }
 
-  update() {
+  update(deltaTime) {
+    this.#spawnTimer += deltaTime;
     this.#sprites.forEach(/** @type {Sprite} */ (sprite) => {
       sprite.update();
     });
@@ -110,5 +111,13 @@ export default class Game {
   
   set mousePress(value) {
     this.#mousePress = value;
+  }
+
+  get spawnTimer() {
+    return this.#spawnTimer;
+  }
+
+  set spawnTimer(value) {
+    this.#spawnTimer = value;
   }
 }

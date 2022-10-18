@@ -51,7 +51,7 @@ export default class Sprite {
    * @param {number} h 
    */
   constructor(game, x, y, w, h, draggable) {
-    /** @type {Game} */this.#game = game;
+    /** @type {Game} */ this.#game = game;
     /** @type {number} */ this.#width = w;
     /** @type {number} */ this.#height = h;
     /** @type {pos} */ this.#pos = { x, y };
@@ -151,13 +151,15 @@ export default class Sprite {
       this.#isDraggable = false;
     }
   }
-  
+
   /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
-    ctx.save();
-    ctx.strokStyle = 'black';
-    ctx.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
-    ctx.stroke();
-    ctx.restore();
+    if (this.#outline) {
+      ctx.save();
+      ctx.strokStyle = 'black';
+      ctx.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
+      ctx.stroke();
+      ctx.restore();
+    }
   }
 }
