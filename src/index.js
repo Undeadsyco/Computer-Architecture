@@ -7,7 +7,11 @@ window.addEventListener('load', () => {
   const container = document.getElementById('canvasContainer');
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = container.offsetWidth, canvas.height = container.offsetHeight;
+  canvas.width = container.offsetWidth - 4, canvas.height = container.offsetHeight - 8;
+  console.log(container.offsetWidth)
+  if (canvas.width >= container.offsetWidth) {
+    container.classList.add('customScroll');
+  }
   container.append(canvas);
 
   window.addEventListener('resize', (e) => {

@@ -14,14 +14,18 @@ export default class Wire extends Circut {
   /** @type {Array<pos>} */ #lineCords;
 
   constructor(game, x, y, input, lineCords = []) {
-    super(game, x, y, 0, 0, [input], [input], false);
+    super(game, x, y, 0, 0, [input], [input], true);
+    this.isStatic = true;
 
     this.#lineCords = lineCords;
-
-    console.log('cords', this.#lineCords);
-    console.log('mouse pos', this.game.mousePos);
-    console.log('this pos', this.pos);
   }
+
+  get lineCords() {
+    return this.#lineCords;
+  }
+  set lineCords(cords) {
+    this.#lineCords = cords;
+  } 
 
   update() {
     super.update();
@@ -47,12 +51,12 @@ export default class Wire extends Circut {
     gradient.addColorStop(this.#step, 'black');
     gradient.addColorStop(this.#step, 'red');
 
-    ctx.strokeStyle = 'red';
+    ctx.strokeStyle = gradient;
 
     ctx.beginPath();
     ctx.moveTo(this.pos.x, this.pos.y);
 
-    if (this.#lineCords.length > 0) for (let i = 0; i < this.#lineCords.length; i += 1) {
+    for (let i = 0; i < this.#lineCords.length; i += 1) {
       ctx.lineTo(this.#lineCords[i].x, this.#lineCords[i].y)
     }
     if (this.draggable) ctx.lineTo(this.game.mousePos.x, this.game.mousePos.y);

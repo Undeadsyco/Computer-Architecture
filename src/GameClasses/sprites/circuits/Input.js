@@ -13,8 +13,6 @@ export default class Input extends Circut {
 
   constructor(game, x, y, output, draggable = false) {
     super(game, x, y, 40, 40 * 0.6, [], [output], draggable);
-    console.log('x', x, 'y', y);
-    console.log('width', this.width, 'height', this.height);
   }
 
   get isActive() {

@@ -147,7 +147,7 @@ export default class Sprite {
       this.#pos.x = this.#game.mousePos.x - (this.#width * 0.5), this.#pos.y = this.#game.mousePos.y - (this.#height * 0.5);
     }
 
-    if (!this.#game.mousePress) {
+    if (!this.#game.mousePress && !this.#isStatic) {
       this.#isDraggable = false;
     }
   }

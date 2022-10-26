@@ -7,16 +7,28 @@ import NOT from "./sprites/circuits/gates/SimpleGates/NOTgate";
 import OR from "./sprites/circuits/gates/SimpleGates/ORgate";
 import Input from "./sprites/circuits/Input";
 
+/** 
+ * @typedef {Object} rect
+ * @property {number} x
+ * @property {number} y
+ * @property {number} width
+ * @property {number} height
+ */
+
 export default class UI {
 
   /** @type {Game} */ #game
   /** @type {Array<Sprite>} */ #sprites = [];
-  #gateBoxPos = { x: 5, y: 5 };
-  #gateBoxWidth = 280;
-  #gateBoxHeight = 45;
-  #wireBtnPos = { x: 15 + this.#gateBoxWidth, y: 5 };
-  #wireBtnWidth = 60;
-  #wireBtnHeight = 20;
+
+  /** @type {import("./Game").rect} */ #gateBox = { x: 5, y: 5, width: 280, height: 45 };
+  /** @type {import("./Game").rect} */ #wireBtn = { x: 15 + this.#gateBox.width, y: 5, width: 60, height: 20 };
+  /** @type {Array<import("./Game").rect>} */ #gateboxes = [
+    { x: 10, y: 10, width: 60, height: 36 },
+    { x: 80, y: 10, width: 60, height: 36 },
+    { x: 150, y: 10, width: 60, height: 36 },
+    { x: 220, y: 10, width: 60, height: 36 },
+  ];
+
 
   /** @param {Game} game */
   constructor(game) {
@@ -30,65 +42,46 @@ export default class UI {
     this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
       sprite.width = 60;
       sprite.height = 60 * 0.6;
-      sprite.showInputs = true;
-      sprite.showOutputs = true;
+      sprite.showInputs = false;
+      sprite.showOutputs = false;
       if (sprite.radius) sprite.radius = 60 * 0.6 * 0.5;
     });
-    this.#sprites[0].showOutputs = false;
+    // this.#sprites[0].showOutputs = false;
+  }
+
+  get gateBox() {
+    return this.#gateBox;
+  }
+
+  set gateBox(rect) {
+    this.#gateBox = rect;
+  }
+
+  get gateBoxes() {
+    return this.#gateboxes;
+  }
+
+  get wireBtn() {
+    return this.#wireBtn;
   }
 
   update() {
-    const mouseOverGateBox = this.#game.detectMouseOver({ 
-      x: this.#gateBoxPos.x, 
-      y: this.#gateBoxPos.y, 
-      w: this.#gateBoxWidth, 
-      h: this.#gateBoxHeight,
-    });
-
-    if (this.#game.mousePress && mouseOverGateBox && this.#game.spawnTimer > 500) {
-      const firstQuad = (
-        this.#game.mousePos.x > this.#gateBoxPos.x &&
-        this.#game.mousePos.x < this.#gateBoxPos.x + (this.#gateBoxWidth * 0.25)
-      ),
-        secondQuad = (
-          this.#game.mousePos.x > this.#gateBoxPos.x + (this.#gateBoxWidth * 0.25) &&
-          this.#game.mousePos.x < this.#gateBoxPos.x + (this.#gateBoxWidth * 0.5)
-        ),
-        thirdQuad = (
-          this.#game.mousePos.x > this.#gateBoxPos.x + (this.#gateBoxWidth * 0.5) &&
-          this.#game.mousePos.x < this.#gateBoxPos.x + (this.#gateBoxWidth * 0.75)
-        ),
-        forthQuad = (
-          this.#game.mousePos.x > this.#gateBoxPos.x + (this.#gateBoxWidth * 0.25) &&
-          this.#game.mousePos.x < this.#gateBoxPos.x + this.#gateBoxWidth
-        );
-
-      if (firstQuad) {
-        this.#game.spawnTimer = 0;
-        this.#game.inputs.push(new Input(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, 0, true));
-      } else if (secondQuad) {
-        this.#game.spawnTimer = 0;
-        this.#game.sprites.push(new NOT(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
-      } else if (thirdQuad) {
-        this.#game.spawnTimer = 0;
-        this.#game.sprites.push(new AND(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
-      } else if (forthQuad) {
-        this.#game.spawnTimer = 0;
-        this.#game.sprites.push(new OR(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
+    if (this.#game.detectMouseOver(this.#gateBox)) {
+      if (this.#game.mousePress && this.#game.spawnTimer > 500) {
+        if (this.#game.detectMouseOver(this.#gateboxes[0])) {
+          this.#game.spawnTimer = 0;
+          this.#game.inputs.push(new Input(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, 0, true));
+        } else if (this.#game.detectMouseOver(this.#gateboxes[1])) {
+          this.#game.spawnTimer = 0;
+          this.#game.sprites.push(new NOT(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
+        } else if (this.#game.detectMouseOver(this.#gateboxes[2])) {
+          this.#game.spawnTimer = 0;
+          this.#game.sprites.push(new AND(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
+        } else if (this.#game.detectMouseOver(this.#gateboxes[3])) {
+          this.#game.spawnTimer = 0;
+          this.#game.sprites.push(new OR(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
+        }
       }
-    }
-
-    const mouseOverBtn = this.#game.detectMouseOver({
-      x: this.#wireBtnPos.x,
-      y: this.#wireBtnPos.y,
-      w: this.#wireBtnWidth,
-      h: this.#wireBtnHeight,
-    });
-
-    if (!this.#game.wireMode) {
-      if (this.#game.mousePress && mouseOverBtn) {
-        this.#game.wireMode = true;
-      } else if (this.#game.mousePress && mouseOverBtn) this.#game.wireMode = false;
     }
 
     this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
@@ -100,12 +93,11 @@ export default class UI {
   draw(ctx) {
     this.#drawUI(ctx);
 
-    ctx.beginPath();
-    ctx.rect(10, 10, 60, 60 * 0.6);
-    ctx.rect(80, 10, 60, 60 * 0.6);
-    ctx.rect(150, 10, 60, 60 * 0.6);
-    ctx.rect(220, 10, 60, 60 * 0.6);
-    ctx.stroke();
+    this.#gateboxes.forEach(/** @type {rect} */(rect) => {
+      ctx.beginPath();
+      ctx.rect(rect.x, rect.y, rect.width, rect.height);
+      ctx.stroke();
+    });
 
     this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
       sprite.draw(ctx);
@@ -124,26 +116,47 @@ export default class UI {
     ctx.shadowBlur = 5;
     ctx.shadowColor = 'gray';
 
-    ctx.rect(this.#gateBoxPos.x, this.#gateBoxPos.y, this.#gateBoxWidth, this.#gateBoxHeight);
+    ctx.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
     ctx.fill();
     ctx.stroke();
 
     const r = 10;
     ctx.beginPath();
-    ctx.rect(this.#wireBtnPos.x, this.#wireBtnPos.y, this.#wireBtnWidth, this.#wireBtnHeight);
-    ctx.moveTo(this.#wireBtnPos.x + r, this.#wireBtnPos.y);
-    ctx.lineTo(this.#wireBtnPos.x + (this.#wireBtnWidth) - r, this.#wireBtnPos.y);
+    ctx.fillStyle = '#666'
+    ctx.moveTo(this.#wireBtn.x + r, this.#wireBtn.y);
+    ctx.lineTo(this.#wireBtn.x + (this.#wireBtn.width) - r, this.#wireBtn.y);
     ctx.quadraticCurveTo(
-      this.#wireBtnPos.x + this.#wireBtnWidth, 
-      this.#wireBtnPos.y, 
-      this.#wireBtnPos.x + this.#wireBtnWidth,
-      this.#wireBtnPos.y + r,
+      this.#wireBtn.x + this.#wireBtn.width,
+      this.#wireBtn.y,
+      this.#wireBtn.x + this.#wireBtn.width,
+      this.#wireBtn.y + r,
     );
-    ctx.lineTo(this.#wireBtnPos.x + this.#wireBtnWidth, this.#wireBtnPos.y + this.#wireBtnHeight - r);
-    // ctx.quadraticCurveTo()
-
+    ctx.lineTo(this.#wireBtn.x + this.#wireBtn.width, this.#wireBtn.y + this.#wireBtn.height - r);
+    ctx.quadraticCurveTo(
+      this.#wireBtn.x + this.#wireBtn.width,
+      this.#wireBtn.y + this.#wireBtn.height,
+      this.#wireBtn.x + this.#wireBtn.width - r,
+      this.#wireBtn.y + this.#wireBtn.height,
+    );
+    ctx.lineTo(this.#wireBtn.x + r, this.#wireBtn.y + this.#wireBtn.height);
+    ctx.quadraticCurveTo(
+      this.#wireBtn.x,
+      this.#wireBtn.y + this.#wireBtn.height,
+      this.#wireBtn.x,
+      this.#wireBtn.y + this.#wireBtn.height - r
+    );
+    ctx.lineTo(this.#wireBtn.x, this.#wireBtn.y + r);
+    ctx.quadraticCurveTo(
+      this.#wireBtn.x, this.#wireBtn.y,
+      this.#wireBtn.x + r, this.#wireBtn.y,
+    );
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
+
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Helvetica'
+    ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
 
     ctx.restore();
   }

@@ -14,11 +14,11 @@ export default class Circut extends Sprite {
   /** @type {Array<number>} */ #inputs = [];
   /** @type {Array<pos>} */ #inputPos = [];
   /** @type {Array<number>} */ #inputStops = [];
-  /** @type {boolean} */ #showInputs = false;
+  /** @type {boolean} */ #showInputs = true;
   /** @type {Array<number>} */ #outputs = [];
   /** @type {Array<pos>} */ #outputPos = [];
   /** @type {Array<number>} */ #outputStops = [];
-  /** @type {boolean} */ #showOutputs = false;
+  /** @type {boolean} */ #showOutputs = true;
 
   /**
    * @param {Game} game
@@ -90,7 +90,7 @@ export default class Circut extends Sprite {
   calculateInputPos() {
     this.inputPos = [];
     for (let i = 0; i < this.#inputs.length; i++) {
-      this.#inputPos.push({ x: this.pos.x, y: this.pos.y + (this.height * this.#inputStops[i]) });
+      this.#inputPos.push({ x: this.pos.x + (this.width * 0.25), y: this.pos.y + (this.height * this.#inputStops[i]) });
     }
   }
 
@@ -119,7 +119,7 @@ export default class Circut extends Sprite {
   calculateOutputPos() {
     this.#outputPos = [];
     for (let i = 0; i < this.#outputs.length; i++) {
-      this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i]) });
+      this.#outputPos.push({ x: this.pos.x + (this.width * 0.75), y: this.pos.y + (this.height * this.#outputStops[i]) });
     }
   }
 
@@ -135,8 +135,8 @@ export default class Circut extends Sprite {
 
     if (this.#showInputs) this.#inputPos.forEach(/** @type {pos} */(pos) => {
       ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      ctx.lineTo(pos.x + (this.width * 0.25), pos.y);
+      ctx.moveTo(pos.x , pos.y);
+      ctx.lineTo(pos.x - (this.width * 0.25), pos.y);
       ctx.stroke();
       if (this.game.wireMode) {
         ctx.beginPath();
@@ -152,6 +152,7 @@ export default class Circut extends Sprite {
       if (this.game.wireMode) {
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx.rect(pos.x - 5, pos.y - 5, 10, 10);
         ctx.stroke();
       }
     });
