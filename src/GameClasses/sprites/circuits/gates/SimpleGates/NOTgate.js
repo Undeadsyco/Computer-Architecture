@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 import Sprite from "../../../Sprite";
 import Circut from "../../Circuit";

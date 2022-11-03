@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 /**
  * @typedef {Object} pos
@@ -16,6 +16,7 @@
 
 import InputHandler from "./InputHandler";
 import { Sprite } from "./sprites";
+import Circut from "./sprites/circuits/Circuit";
 import Input from "./sprites/circuits/Input";
 import Wire from "./sprites/circuits/Wire";
 import UI from "./UI";
@@ -25,7 +26,7 @@ export default class Game {
   /** @type {number} */ #height;
   /** @type {pos} */ #mousePos = { x: 0, y: 0 };
   /** @type {boolean} */ #mousePress = false;
-  /** @type {Array<Sprite>} */ #sprites = [];
+  /** @type {Array<Circut>} */ #sprites = [];
   /** @type {Array<Input>} */ #inputs = [];
   /** @type {Array<Wire>} */ #wires = [];
   /** @type {InputHandler} */ #inputHandler;
@@ -36,8 +37,7 @@ export default class Game {
 
   /**
    * @param {number} width
-   * @param {number} height 
-   * @param {pos} mousePos
+   * @param {number} height
    */
   constructor(width, height) {
     this.#width = width;
@@ -51,7 +51,7 @@ export default class Game {
 
   update(deltaTime) {
     this.#spawnTimer += deltaTime;
-    this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
+    this.#sprites.forEach(/** @type {Circut} */(sprite) => {
       sprite.update();
     });
     this.#inputs.forEach(/** @type {Input} */(input) => {
@@ -60,23 +60,26 @@ export default class Game {
 
     this.#ui.update();
 
-    this.#sprites = this.#sprites.filter(/** @type {Sprite} */(sprite) => !sprite.shouldDelete);
+    this.#sprites = this.#sprites.filter(/** @type {Circut} */(sprite) => !sprite.shouldDelete);
     this.#inputs = this.#inputs.filter(/** @type {Input} */(input) => !input.shouldDelete);
   }
 
-  /** @param {CanvasRenderingContext2D} ctx */
+  /** @param {CanvasRenderingContext2D | null} ctx */
   draw(ctx) {
     if (this.#wireMode) {
-      ctx.save();
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.strokeRect(2, 2, this.#width-4, this.#height-4);
-      ctx.restore();
+      ctx?.save();
+      // @ts-ignore
+      ctx?.fillStyle = 'white';
+      // @ts-ignore
+      ctx?.strokeStyle = 'red';
+      // @ts-ignore
+      ctx?.lineWidth = 4;
+      ctx?.beginPath();
+      ctx?.strokeRect(2, 2, this.#width-4, this.#height-4);
+      ctx?.restore();
     }
 
-    this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
+    this.#sprites.forEach(/** @type {Circut} */(sprite) => {
       sprite.draw(ctx);
     });
     this.#inputs.forEach(/** @type {Input} */(input) => {

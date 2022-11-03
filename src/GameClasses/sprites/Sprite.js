@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 import Game from "../Game";
 
@@ -10,28 +10,27 @@ import Game from "../Game";
 
 export default class Sprite {
   /** 
-   * @param {CanvasRenderingContext2D} ctx
-   * @typedef {Object} pos
-   * @property {number} x
-   * @property {number} y
+   * @param {CanvasRenderingContext2D | null} ctx
    * @param {pos} pos
    * @param {number} width
    * @param {number} height
    */
   static draw(ctx, { x, y }, width, height) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokStyle = 'black';
-    ctx.fillStyle = 'blue';
-    ctx.rect(x, y, width, height);
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
+    ctx?.save();
+    ctx?.beginPath();
+    // @ts-ignore
+    ctx?.strokStyle = 'black';
+    // @ts-ignore
+    ctx?.fillStyle = 'blue';
+    ctx?.rect(x, y, width, height);
+    ctx?.fill();
+    ctx?.stroke();
+    ctx?.restore();
   }
 
   /** @type {Game} */ #game;
 
-  /** @type {pos} */ #pos = {};
+  /** @type {pos} */ #pos = { x: 0, y: 0 };
 
   /** @type {number} */ #width;
   /** @type {number} */ #height;
@@ -45,10 +44,12 @@ export default class Sprite {
   /** @type {boolean} */ #shouldDelete = false;
 
   /**
+   * @param {Game} game
    * @param {number} x 
    * @param {number} y 
    * @param {number} w 
    * @param {number} h 
+   * @param {boolean} draggable
    */
   constructor(game, x, y, w, h, draggable) {
     /** @type {Game} */ this.#game = game;
@@ -84,7 +85,7 @@ export default class Sprite {
   get height() {
     return this.#height;
   }
-  /** @param {number} w */
+  /** @param {number} h */
   set height(h) {
     this.#height = h;
   }
@@ -152,14 +153,15 @@ export default class Sprite {
     }
   }
 
-  /** @param {CanvasRenderingContext2D} ctx */
+  /** @param {CanvasRenderingContext2D | null} ctx */
   draw(ctx) {
     if (this.#outline) {
-      ctx.save();
-      ctx.strokStyle = 'black';
-      ctx.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
-      ctx.stroke();
-      ctx.restore();
+      ctx?.save();
+      // @ts-ignore
+      ctx?.strokeStyle = 'black';
+      ctx?.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
+      ctx?.stroke();
+      ctx?.restore();
     }
   }
 }

@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 import Circut from "../../Circuit";
 import { NOT, AND, OR } from '../SimpleGates';

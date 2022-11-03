@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 import Game from "../../../../Game";
 import Sprite from "../../../Sprite";

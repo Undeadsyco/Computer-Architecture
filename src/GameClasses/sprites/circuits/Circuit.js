@@ -1,4 +1,4 @@
-// ts-check
+// @ts-check
 
 import Game from "../../Game";
 import Sprite from "../Sprite";
@@ -9,7 +9,6 @@ import Sprite from "../Sprite";
  * @property {number} y
  */
 
-/** @type {Sprite} */
 export default class Circut extends Sprite {
   /** @type {Array<number>} */ #inputs = [];
   /** @type {Array<pos>} */ #inputPos = [];
@@ -19,6 +18,7 @@ export default class Circut extends Sprite {
   /** @type {Array<pos>} */ #outputPos = [];
   /** @type {Array<number>} */ #outputStops = [];
   /** @type {boolean} */ #showOutputs = true;
+  /** @type {number} */ #radius;
 
   /**
    * @param {Game} game
@@ -61,6 +61,13 @@ export default class Circut extends Sprite {
     for (let i = 0; i < outputs.length; i++) {
       this.#outputPos.push({ x: this.pos.x + this.width, y: this.pos.y + (this.height * this.#outputStops[i]) });
     }
+  }
+
+  get radius() {
+    return this.#radius;
+  }
+  set radius(r) {
+    this.#radius = r;
   }
 
   get inputs() {
@@ -129,31 +136,31 @@ export default class Circut extends Sprite {
     this.calculateOutputPos();
   }
 
-  /** @param {CanvasRenderingContext2D} ctx */
+  /** @param {CanvasRenderingContext2D | null} ctx */
   draw(ctx) {
     super.draw(ctx);
 
     if (this.#showInputs) this.#inputPos.forEach(/** @type {pos} */(pos) => {
-      ctx.beginPath();
-      ctx.moveTo(pos.x , pos.y);
-      ctx.lineTo(pos.x - (this.width * 0.25), pos.y);
-      ctx.stroke();
+      ctx?.beginPath();
+      ctx?.moveTo(pos.x , pos.y);
+      ctx?.lineTo(pos.x - (this.width * 0.25), pos.y);
+      ctx?.stroke();
       if (this.game.wireMode) {
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
-        ctx.stroke();
+        ctx?.beginPath();
+        ctx?.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx?.stroke();
       }
     });
     if (this.#showOutputs) this.#outputPos.forEach(/** @type {pos} */(pos) => {
-      ctx.beginPath();
-      ctx.moveTo(this.pos.x + this.width, pos.y);
-      ctx.lineTo(this.pos.x + (this.width * 0.75), pos.y);
-      ctx.stroke();
+      ctx?.beginPath();
+      ctx?.moveTo(this.pos.x + this.width, pos.y);
+      ctx?.lineTo(this.pos.x + (this.width * 0.75), pos.y);
+      ctx?.stroke();
       if (this.game.wireMode) {
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
-        ctx.rect(pos.x - 5, pos.y - 5, 10, 10);
-        ctx.stroke();
+        ctx?.beginPath();
+        ctx?.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx?.rect(pos.x - 5, pos.y - 5, 10, 10);
+        ctx?.stroke();
       }
     });
   }
