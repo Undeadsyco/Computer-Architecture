@@ -136,31 +136,31 @@ export default class Circut extends Sprite {
     this.calculateOutputPos();
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx */
+  /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
     super.draw(ctx);
 
     if (this.#showInputs) this.#inputPos.forEach(/** @type {pos} */(pos) => {
-      ctx?.beginPath();
-      ctx?.moveTo(pos.x , pos.y);
-      ctx?.lineTo(pos.x - (this.width * 0.25), pos.y);
-      ctx?.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pos.x , pos.y);
+      ctx.lineTo(pos.x - (this.width * 0.25), pos.y);
+      ctx.stroke();
       if (this.game.wireMode) {
-        ctx?.beginPath();
-        ctx?.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
-        ctx?.stroke();
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx.stroke();
       }
     });
     if (this.#showOutputs) this.#outputPos.forEach(/** @type {pos} */(pos) => {
-      ctx?.beginPath();
-      ctx?.moveTo(this.pos.x + this.width, pos.y);
-      ctx?.lineTo(this.pos.x + (this.width * 0.75), pos.y);
-      ctx?.stroke();
+      ctx.beginPath();
+      ctx.moveTo(this.pos.x + this.width, pos.y);
+      ctx.lineTo(this.pos.x + (this.width * 0.75), pos.y);
+      ctx.stroke();
       if (this.game.wireMode) {
-        ctx?.beginPath();
-        ctx?.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
-        ctx?.rect(pos.x - 5, pos.y - 5, 10, 10);
-        ctx?.stroke();
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 5, 0, Math.PI * 2, false);
+        ctx.rect(pos.x - 5, pos.y - 5, 10, 10);
+        ctx.stroke();
       }
     });
   }

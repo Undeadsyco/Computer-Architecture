@@ -64,19 +64,17 @@ export default class Game {
     this.#inputs = this.#inputs.filter(/** @type {Input} */(input) => !input.shouldDelete);
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx */
+  /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
     if (this.#wireMode) {
-      ctx?.save();
-      // @ts-ignore
-      ctx?.fillStyle = 'white';
-      // @ts-ignore
-      ctx?.strokeStyle = 'red';
-      // @ts-ignore
-      ctx?.lineWidth = 4;
-      ctx?.beginPath();
-      ctx?.strokeRect(2, 2, this.#width-4, this.#height-4);
-      ctx?.restore();
+      ctx.save();
+
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.strokeRect(2, 2, this.#width - 4, this.#height - 4);
+      ctx.restore();
     }
 
     this.#sprites.forEach(/** @type {Circut} */(sprite) => {
@@ -87,7 +85,6 @@ export default class Game {
     });
 
     this.#ui.draw(ctx);
-
   }
 
   /**
@@ -105,7 +102,7 @@ export default class Game {
     return (
       this.#mousePos.x > rect.x &&
       this.#mousePos.x < rect.x + rect.width &&
-      this.#mousePos.y > rect.y  &&
+      this.#mousePos.y > rect.y &&
       this.#mousePos.y < rect.y + rect.height
     );
   }

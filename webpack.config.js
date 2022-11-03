@@ -1,8 +1,14 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BabelLoader = require('babel-loader');
+const path = require('path');
 
 module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'build'),
+  },
   mode: 'development',
   module: {
     rules: [

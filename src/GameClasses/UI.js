@@ -90,14 +90,14 @@ export default class UI {
     });
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx */
+  /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
     this.#drawUI(ctx);
 
     this.#gateboxes.forEach(/** @type {rect} */(rect) => {
-      ctx?.beginPath();
-      ctx?.rect(rect.x, rect.y, rect.width, rect.height);
-      ctx?.stroke();
+      ctx.beginPath();
+      ctx.rect(rect.x, rect.y, rect.width, rect.height);
+      ctx.stroke();
     });
 
     this.#sprites.forEach(/** @type {Circut} */(sprite) => {
@@ -105,69 +105,63 @@ export default class UI {
     });
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx */
+  /** @param {CanvasRenderingContext2D} ctx */
   #drawUI(ctx) {
-    ctx?.save();
+    ctx.save();
 
-    ctx?.beginPath();
-    // @ts-ignore
-    ctx?.strokeStyle = 'black';
-    // @ts-ignore
-    ctx?.fillStyle = 'white';
-    // @ts-ignore
-    ctx?.shadowOffsetX = -5;
-    // @ts-ignore
-    ctx?.shadowOffsetY = -2;
-    // @ts-ignore
-    ctx?.shadowBlur = 5;
-    // @ts-ignore
-    ctx?.shadowColor = 'gray';
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'white';
+    ctx.shadowOffsetX = -5;
+    ctx.shadowOffsetY = -2;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = 'gray';
 
-    ctx?.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
-    ctx?.fill();
-    ctx?.stroke();
+    ctx.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
+    ctx.fill();
+    ctx.stroke();
 
     const r = 10;
-    ctx?.beginPath();
+    ctx.beginPath();
     // @ts-ignore
-    ctx?.fillStyle = '#666'
-    ctx?.moveTo(this.#wireBtn.x + r, this.#wireBtn.y);
-    ctx?.lineTo(this.#wireBtn.x + (this.#wireBtn.width) - r, this.#wireBtn.y);
-    ctx?.quadraticCurveTo(
+    ctx.fillStyle = '#666'
+    ctx.moveTo(this.#wireBtn.x + r, this.#wireBtn.y);
+    ctx.lineTo(this.#wireBtn.x + (this.#wireBtn.width) - r, this.#wireBtn.y);
+    ctx.quadraticCurveTo(
       this.#wireBtn.x + this.#wireBtn.width,
       this.#wireBtn.y,
       this.#wireBtn.x + this.#wireBtn.width,
       this.#wireBtn.y + r,
     );
-    ctx?.lineTo(this.#wireBtn.x + this.#wireBtn.width, this.#wireBtn.y + this.#wireBtn.height - r);
-    ctx?.quadraticCurveTo(
+    ctx.lineTo(this.#wireBtn.x + this.#wireBtn.width, this.#wireBtn.y + this.#wireBtn.height - r);
+    ctx.quadraticCurveTo(
       this.#wireBtn.x + this.#wireBtn.width,
       this.#wireBtn.y + this.#wireBtn.height,
       this.#wireBtn.x + this.#wireBtn.width - r,
       this.#wireBtn.y + this.#wireBtn.height,
     );
-    ctx?.lineTo(this.#wireBtn.x + r, this.#wireBtn.y + this.#wireBtn.height);
-    ctx?.quadraticCurveTo(
+    ctx.lineTo(this.#wireBtn.x + r, this.#wireBtn.y + this.#wireBtn.height);
+    ctx.quadraticCurveTo(
       this.#wireBtn.x,
       this.#wireBtn.y + this.#wireBtn.height,
       this.#wireBtn.x,
       this.#wireBtn.y + this.#wireBtn.height - r
     );
-    ctx?.lineTo(this.#wireBtn.x, this.#wireBtn.y + r);
-    ctx?.quadraticCurveTo(
+    ctx.lineTo(this.#wireBtn.x, this.#wireBtn.y + r);
+    ctx.quadraticCurveTo(
       this.#wireBtn.x, this.#wireBtn.y,
       this.#wireBtn.x + r, this.#wireBtn.y,
     );
-    ctx?.closePath();
-    ctx?.fill();
-    ctx?.stroke();
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
     // @ts-ignore
-    ctx?.fillStyle = 'white';
+    ctx.fillStyle = 'white';
     // @ts-ignore
-    ctx?.font = '16px Helvetica'
-    ctx?.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
+    ctx.font = '16px Helvetica'
+    ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
 
-    ctx?.restore();
+    ctx.restore();
   }
 }

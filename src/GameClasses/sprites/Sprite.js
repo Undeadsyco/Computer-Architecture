@@ -10,22 +10,20 @@ import Game from "../Game";
 
 export default class Sprite {
   /** 
-   * @param {CanvasRenderingContext2D | null} ctx
+   * @param {CanvasRenderingContext2D} ctx
    * @param {pos} pos
    * @param {number} width
    * @param {number} height
    */
   static draw(ctx, { x, y }, width, height) {
-    ctx?.save();
-    ctx?.beginPath();
-    // @ts-ignore
-    ctx?.strokStyle = 'black';
-    // @ts-ignore
-    ctx?.fillStyle = 'blue';
-    ctx?.rect(x, y, width, height);
-    ctx?.fill();
-    ctx?.stroke();
-    ctx?.restore();
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'blue';
+    ctx.rect(x, y, width, height);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 
   /** @type {Game} */ #game;
@@ -153,15 +151,14 @@ export default class Sprite {
     }
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx */
+  /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
     if (this.#outline) {
-      ctx?.save();
-      // @ts-ignore
-      ctx?.strokeStyle = 'black';
-      ctx?.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
-      ctx?.stroke();
-      ctx?.restore();
+      ctx.save();
+      ctx.strokeStyle = 'black';
+      ctx.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
+      ctx.stroke();
+      ctx.restore();
     }
   }
 }

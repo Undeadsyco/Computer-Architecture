@@ -36,25 +36,23 @@ export default class Input extends Circut {
     else this.output[0] = 0;
   }
 
-  /** @param {CanvasRenderingContext2D | null} ctx*/
+  /** @param {CanvasRenderingContext2D} ctx*/
   draw(ctx) {
     super.draw(ctx);
 
-    ctx?.save();
+    ctx.save();
 
-    // @ts-ignore
-    ctx?.font = "12px Helvetica";
-    // @ts-ignore
-    ctx?.fillStyle = 'gray';
+    ctx.font = "12px Helvetica";
+    ctx.fillStyle = 'gray';
 
-    ctx?.beginPath();
-    ctx?.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
-    ctx?.strokeRect(this.pos.x + 5, this.pos.y + 5, this.width - 10, this.height - 10);
+    ctx.beginPath();
+    ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
+    ctx.strokeRect(this.pos.x + 5, this.pos.y + 5, this.width - 10, this.height - 10);
 
-    ctx?.strokeText(this.#isActive ? 'ON' : 'OFF', this.pos.x + this.width * 0.25, this.pos.y + this.height * 0.75 - 2);
+    ctx.strokeText(this.#isActive ? 'ON' : 'OFF', this.pos.x + this.width * 0.25, this.pos.y + this.height * 0.75 - 2);
 
-    ctx?.stroke();
+    ctx.stroke();
 
-    ctx?.restore();
+    ctx.restore();
   }
 }
