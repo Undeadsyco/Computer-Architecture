@@ -21,3 +21,11 @@
 .curser-pointer {
   cursor: pointer;
 }
+
+.curser-grab {
+  cursor: grab;
+}
+
+.curser-grabbing {
+  cursor: grabbing;
+}

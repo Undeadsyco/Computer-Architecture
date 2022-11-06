@@ -1,112 +1,72 @@
 // @ts-check
 
 import Game from "./Game";
-import { Sprite } from "./sprites";
-import Circut from "./sprites/circuits/Circuit";
-import AND from "./sprites/circuits/gates/SimpleGates/ANDgate";
-import NOT from "./sprites/circuits/gates/SimpleGates/NOTgate";
-import OR from "./sprites/circuits/gates/SimpleGates/ORgate";
-import Input from "./sprites/circuits/Input";
+import { Switch } from "./sprites/circuits";
+import { NOT, AND, OR } from './sprites/circuits/gates';
 
-/** 
- * @typedef {Object} rect
- * @property {number} x
- * @property {number} y
- * @property {number} width
- * @property {number} height
- */
+
+/** @typedef {import("../type/types").rect} rect */
+/** @typedef {import('../type/types').circuit} circuit */
+/** @typedef {import("../type/types").input} input */
+/** @typedef {import("../type/types").output} output */
 
 export default class UI {
 
   /** @type {Game} */ #game
-  /** @type {Array<Circut>} */ #sprites = [];
+  /** @type {Array<circuit>} */ #sprites = [];
 
-  /** @type {import("./Game").rect} */ #gateBox = { x: 5, y: 5, width: 280, height: 45 };
-  /** @type {import("./Game").rect} */ #wireBtn = { x: 15 + this.#gateBox.width, y: 5, width: 60, height: 20 };
-  /** @type {Array<import("./Game").rect>} */ #gateboxes = [
+  /** @type {rect} */ #gateBox = { x: 5, y: 5, width: 280, height: 45 };
+  /** @type {Array<rect>} */ #gateboxes = [
     { x: 10, y: 10, width: 60, height: 36 },
     { x: 80, y: 10, width: 60, height: 36 },
     { x: 150, y: 10, width: 60, height: 36 },
     { x: 220, y: 10, width: 60, height: 36 },
   ];
 
+  /** @type {rect} */ #wireBtn = { x: 15 + this.#gateBox.width, y: 5, width: 60, height: 20 };
+  /** @type {rect} */ #deleteBtn = {
+    x: this.#wireBtn.x,
+    y: this.#wireBtn.y + this.#wireBtn.height + 5,
+    width: this.#wireBtn.width,
+    height: this.#wireBtn.height,
+  };
 
   /** @param {Game} game */
   constructor(game) {
     this.#game = game;
     this.#sprites.push(
-      new Input(this.#game, 10, 10, 0, false),
-      new NOT(this.#game, 80, 10, 0, false),
-      new AND(this.#game, 150, 10, [0, 0], false),
-      new OR(this.#game, 220, 10, [0, 0], false),
+      new Switch(this.#game, 10, 10),
+      new NOT(this.#game, 80, 10, 0),
+      new AND(this.#game, 150, 10, [0, 0]),
+      new OR(this.#game, 220, 10, [0, 0]),
     );
-    this.#sprites.forEach(/** @type {Circut} */(sprite) => {
-      sprite.width = 60;
-      sprite.height = 60 * 0.6;
-      // sprite.showInputs = false;
-      // sprite.showOutputs = false;
-      if (sprite.radius) sprite.radius = 60 * 0.6 * 0.5;
+    this.#sprites.forEach(/** @type {circuit} */(circuit) => {
+      circuit.width = 60;
+      circuit.height = 60 * 0.6;
+      circuit.radius = circuit.height * 0.5;
+      circuit.inputs?.forEach(/** @type {input} */(input) => {
+        input.visible = false;
+      });
+      circuit.outputs?.forEach(/** @type {output} */(output) => {
+        output.visible = false;
+      })
     });
-    // this.#sprites[0].showOutputs = false;
   }
 
-  get gateBox() {
-    return this.#gateBox;
-  }
+  get gateBox() { return this.#gateBox; }
+  set gateBox(rect) { this.#gateBox = rect; }
 
-  set gateBox(rect) {
-    this.#gateBox = rect;
-  }
-
-  get gateBoxes() {
-    return this.#gateboxes;
-  }
-
-  get wireBtn() {
-    return this.#wireBtn;
-  }
+  get gateBoxes() { return this.#gateboxes; }
+  get wireBtn() { return this.#wireBtn; }
 
   update() {
-    if (this.#game.detectMouseOver(this.#gateBox)) {
-      if (this.#game.mousePress && this.#game.spawnTimer > 500) {
-        if (this.#game.detectMouseOver(this.#gateboxes[0])) {
-          this.#game.spawnTimer = 0;
-          this.#game.inputs.push(new Input(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, 0, true));
-        } else if (this.#game.detectMouseOver(this.#gateboxes[1])) {
-          this.#game.spawnTimer = 0;
-          this.#game.sprites.push(new NOT(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
-        } else if (this.#game.detectMouseOver(this.#gateboxes[2])) {
-          this.#game.spawnTimer = 0;
-          this.#game.sprites.push(new AND(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
-        } else if (this.#game.detectMouseOver(this.#gateboxes[3])) {
-          this.#game.spawnTimer = 0;
-          this.#game.sprites.push(new OR(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0], true));
-        }
-      }
-    }
-
-    this.#sprites.forEach(/** @type {Sprite} */(sprite) => {
+    this.#sprites.forEach(/** @type {circuit} */(sprite) => {
       sprite.update();
     });
   }
 
   /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
-    this.#drawUI(ctx);
-
-    this.#gateboxes.forEach(/** @type {rect} */(rect) => {
-      ctx.beginPath();
-      ctx.rect(rect.x, rect.y, rect.width, rect.height);
-      ctx.stroke();
-    });
-
-    this.#sprites.forEach(/** @type {Circut} */(sprite) => {
-      sprite.draw(ctx);
-    });
-  }
-
-  /** @param {CanvasRenderingContext2D} ctx */
-  #drawUI(ctx) {
     ctx.save();
 
     ctx.beginPath();
@@ -117,13 +77,13 @@ export default class UI {
     ctx.shadowBlur = 5;
     ctx.shadowColor = 'gray';
 
+    ctx.beginPath();
     ctx.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
     ctx.fill();
     ctx.stroke();
 
     const r = 10;
     ctx.beginPath();
-    // @ts-ignore
     ctx.fillStyle = '#666'
     ctx.moveTo(this.#wireBtn.x + r, this.#wireBtn.y);
     ctx.lineTo(this.#wireBtn.x + (this.#wireBtn.width) - r, this.#wireBtn.y);
@@ -156,12 +116,123 @@ export default class UI {
     ctx.fill();
     ctx.stroke();
 
-    // @ts-ignore
     ctx.fillStyle = 'white';
-    // @ts-ignore
     ctx.font = '16px Helvetica'
     ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
 
+    
+    ctx.beginPath();
+    ctx.fillStyle = '#bd0b1d'
+    ctx.moveTo(this.#deleteBtn.x + r, this.#deleteBtn.y);
+    ctx.lineTo(this.#deleteBtn.x + (this.#deleteBtn.width) - r, this.#deleteBtn.y);
+    ctx.quadraticCurveTo(
+      this.#deleteBtn.x + this.#deleteBtn.width,
+      this.#deleteBtn.y,
+      this.#deleteBtn.x + this.#deleteBtn.width,
+      this.#deleteBtn.y + r,
+    );
+    ctx.lineTo(this.#deleteBtn.x + this.#deleteBtn.width, this.#deleteBtn.y + this.#deleteBtn.height - r);
+    ctx.quadraticCurveTo(
+      this.#deleteBtn.x + this.#deleteBtn.width,
+      this.#deleteBtn.y + this.#deleteBtn.height,
+      this.#deleteBtn.x + this.#deleteBtn.width - r,
+      this.#deleteBtn.y + this.#deleteBtn.height,
+    );
+    ctx.lineTo(this.#deleteBtn.x + r, this.#deleteBtn.y + this.#deleteBtn.height);
+    ctx.quadraticCurveTo(
+      this.#deleteBtn.x,
+      this.#deleteBtn.y + this.#deleteBtn.height,
+      this.#deleteBtn.x,
+      this.#deleteBtn.y + this.#deleteBtn.height - r
+    );
+    ctx.lineTo(this.#deleteBtn.x, this.#deleteBtn.y + r);
+    ctx.quadraticCurveTo(
+      this.#deleteBtn.x, this.#deleteBtn.y,
+      this.#deleteBtn.x + r, this.#deleteBtn.y,
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Helvetica'
+    ctx.fillText('Delete', this.#deleteBtn.x + (this.#deleteBtn.width * 0.15), this.#deleteBtn.y + (this.#deleteBtn.height * 0.75));
+
     ctx.restore();
+
+    this.#gateboxes.forEach(/** @type {rect} */({ x, y, width, height }) => {
+      ctx.beginPath();
+      ctx.rect(x, y, width, height);
+      ctx.stroke();
+    });
+
+    this.#sprites.forEach(/** @type {circuit} */(sprite) => {
+      sprite.draw(ctx);
+    });
   }
+
+  detectMouseOver() {
+    if (this.#game.detectMouseOver(this.#wireBtn)) this.#game.container?.classList.add('curser-pointer');
+    if (this.#game.detectMouseOver(this.#deleteBtn)) this.#game.container?.classList.add('curser-pointer');
+    this.#gateboxes.forEach(/** @type {rect} */(box) => {
+      if (this.#game.detectMouseOver(box) && !this.#game.wireMode) {
+        this.#game.container?.classList.add('curser-grab');
+      }
+    });
+  }
+
+  detectMouseDown() {
+    if (this.#game.detectMouseOver(this.#gateBox)) {
+      this.#game.ui.gateBoxes.forEach(/** @type {rect} */(box, i) => {
+        if (this.#game.detectMouseOver(box) && !this.#game.wireMode) {
+          switch (i) {
+            case 0:
+              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
+              const input = new Switch(this.#game, this.#game.mousePos.x, this.#game.mousePos.y);
+              input.draggable = true;
+              this.#game.switches.push(input);
+              break;
+            case 1:
+              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
+              const not = new NOT(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, 0);
+              not.draggable = true;
+              this.#game.gates.push(not);
+              break;
+            case 2:
+              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
+              const and = new AND(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0]);
+              and.draggable = true;
+              this.#game.gates.push(and);
+              break;
+            case 3:
+              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
+              const or = new OR(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0]);
+              or.draggable = true;
+              this.#game.gates.push(or);
+              break;
+            default:
+              break;
+          }
+        }
+      });
+    }
+  }
+
+  detectMouseUp() { }
+
+  detectClick() {
+    if (this.#game.detectMouseOver(this.wireBtn)) {
+      if (!this.#game.wireMode) {
+        this.#game.wireMode = true;
+      } else {
+        this.#game.wireMode = false;
+      }
+    }
+
+    if (this.#game.detectMouseOver(this.#deleteBtn)) {
+      this.#game.toggleDeleteMode();
+    }
+  }
+
+  detectDbClick() { }
 }

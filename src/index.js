@@ -26,6 +26,10 @@ window.addEventListener('load', () => {
 
   let lastTime = 0;
 
+  /**
+   * 
+   * @param {number} timeStamp 
+   */
   function animate(timeStamp) {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;

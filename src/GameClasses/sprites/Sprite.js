@@ -1,13 +1,10 @@
 // @ts-check
 
+import { v4 } from 'uuid';
 import Game from "../Game";
 
-/** 
- * @typedef {Object} pos
- * @property {number} x
- * @property {number} y
- */
-
+/** @typedef {import('../../type/types').pos} pos */
+/** @typedef {import('../../type/types').gate} gate */
 export default class Sprite {
   /** 
    * @param {CanvasRenderingContext2D} ctx
@@ -27,19 +24,21 @@ export default class Sprite {
   }
 
   /** @type {Game} */ #game;
+  /** @type {string} */ #id;
 
-  /** @type {pos} */ #pos = { x: 0, y: 0 };
-
+  /** @type {number} */ #x;
+  /** @type {number} */ #y;
   /** @type {number} */ #width;
   /** @type {number} */ #height;
+  /** @type {number} */ #radius;
 
-  /** @type {string} */ #bgColor = 'black'
-  /** @type {string} */ #borderColor = 'black'
+  /** @type {string} */ #bgColor;
+  /** @type {string} */ #borderColor;
 
-  /** @type {boolean} */ #outline = false;
-  /** @type {boolean} */ #isDraggable = false;
-  /** @type {boolean} */ #isStatic = false;
-  /** @type {boolean} */ #shouldDelete = false;
+  /** @type {boolean} */ #outline;
+  /** @type {boolean} */ #isDraggable;
+  /** @type {boolean} */ #isStatic;
+  /** @type {boolean} */ #shouldDelete;
 
   /**
    * @param {Game} game
@@ -47,107 +46,67 @@ export default class Sprite {
    * @param {number} y 
    * @param {number} w 
    * @param {number} h 
-   * @param {boolean} draggable
    */
-  constructor(game, x, y, w, h, draggable) {
-    /** @type {Game} */ this.#game = game;
-    /** @type {number} */ this.#width = w;
-    /** @type {number} */ this.#height = h;
-    /** @type {pos} */ this.#pos = { x, y };
-    /** @type {boolean} */ this.#isDraggable = draggable;
-  }
+  constructor(game, x, y, w, h) {
+    this.#game = game;
+    this.#id = v4();
 
-  get game() {
-    return this.#game;
-  }
-
-  /** @return {pos} */
-  get pos() {
-    return this.#pos;
-  }
-  /** @param {pos} pos*/
-  set pos(pos) {
-    if (!this.isStatic) this.#pos = pos;
-  }
-
-  /** @return {number} */
-  get width() {
-    return this.#width;
-  }
-  /** @param {number} w */
-  set width(w) {
+    this.#x = x;
+    this.#y = y;
     this.#width = w;
-  }
-
-  /** @return {number} */
-  get height() {
-    return this.#height;
-  }
-  /** @param {number} h */
-  set height(h) {
     this.#height = h;
+
+    this.#bgColor = 'black'
+    this.#borderColor = 'black'
+  
+    this.#outline = false;
+    this.#isDraggable = false;
+    this.#isStatic = false;
+    this.#shouldDelete = false;
   }
 
-  get bgColor() {
-    return this.#bgColor
-  }
-  set bgColor(color) {
-    this.#bgColor = color
-  }
+  get game() { return this.#game; }
+  get id() { return this.id; }
 
-  get borderColor() {
-    return this.#borderColor;
-  }
-  set borderColor(color) {
-    this.#borderColor = color;
-  }
+  get x() { return this.#x; }
+  set x(x) { if (!this.isStatic) this.#x = x; }
 
-  /** @return {boolean} */
-  get outline() {
-    return this.#outline
-  }
-  set outline(value) {
-    this.#outline = value;
-  }
-  toggleOutline() {
-    this.#outline = !this.#outline;
-  }
+  get y() { return this.#y; }
+  set y(y) { if (!this.isStatic) this.#y = y; }
 
-  /** @return {boolean} */
-  get draggable() {
-    return this.#isDraggable;
-  }
-  set draggable(value) {
-    this.#isDraggable = value;
-  }
-  toggleDraggable() {
-    this.#isDraggable = !this.#isDraggable;
-  }
+  get width() { return this.#width; }
+  set width(w) { this.#width = w; }
 
-  get isStatic() {
-    return this.#isStatic;
-  }
-  set isStatic(value) {
-    this.#isStatic = value;
-  }
-  toggleStatic() {
-    this.#isStatic = !this.#isStatic;
-  }
+  get height() { return this.#height; }
+  set height(h) { this.#height = h; }
 
-  get shouldDelete() {
-    return this.#shouldDelete;
-  }
-  set shouldDelete(value) {
-    this.#shouldDelete = value;
-  }
+  get radius() { return this.#radius; }
+  set radius(r) { this.#radius = r; }
+
+  get bgColor() { return this.#bgColor }
+  set bgColor(color) { this.#bgColor = color }
+
+  get borderColor() { return this.#borderColor; }
+  set borderColor(color) { this.#borderColor = color; }
+
+  get outline() { return this.#outline }
+  set outline(value) { this.#outline = value; }
+  toggleOutline() { this.#outline = !this.#outline; }
+
+  get draggable() { return this.#isDraggable; }
+  set draggable(value) { this.#isDraggable = value; }
+  toggleDraggable() { this.#isDraggable = !this.#isDraggable; }
+
+  get isStatic() { return this.#isStatic; }
+  set isStatic(value) { this.#isStatic = value; }
+  toggleStatic() { this.#isStatic = !this.#isStatic; }
+
+  get shouldDelete() { return this.#shouldDelete; }
+  set shouldDelete(value) { this.#shouldDelete = value; }
 
   update() {
     if (this.#isDraggable && !this.#isStatic) {
-      this.#pos.x = this.#game.mousePos.x - (this.#width * 0.5), this.#pos.y = this.#game.mousePos.y - (this.#height * 0.5);
-    }
-
-    if (!this.#game.mousePress && !this.#isStatic) {
-      this.#isDraggable = false;
+      this.#x = this.#game.mousePos.x - (this.#width * 0.5), this.#y = this.#game.mousePos.y - (this.#height * 0.5);
     }
   }
 
@@ -156,9 +115,23 @@ export default class Sprite {
     if (this.#outline) {
       ctx.save();
       ctx.strokeStyle = 'black';
-      ctx.rect(this.#pos.x, this.#pos.y, this.#width, this.#height);
+      ctx.rect(this.#x, this.#y, this.#width, this.#height);
       ctx.stroke();
       ctx.restore();
     }
   }
+
+  detectMouseOver() {}
+  
+  detectMouseDown() {}
+
+  detectMouseUp() {}
+
+  /**
+   * @param {number} x
+   * @param {number} y 
+   */
+  detectClick(x, y) {}
+
+  detectDbClick() {}
 }

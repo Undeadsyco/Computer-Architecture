@@ -15,7 +15,7 @@ module.exports = {
       // babel js parsing
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /\.ts$/],
         use: ['babel-loader'],
       },
       // html parsing

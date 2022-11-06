@@ -1,59 +1,80 @@
+// @ts-check
+
 import Game from "./Game";
-import { Sprite } from "./sprites";
-import Circut from "./sprites/circuits/Circuit";
-import Wire from "./sprites/circuits/Wire";
+import { Switch, Wire } from "./sprites/circuits";
+import { AND, NOT, OR } from "./sprites/circuits/gates";
+import { Gate } from "./sprites/circuits/gates/structure";
+
+/** @typedef {import('../type/types').pos} pos */
+/** @typedef {import('../type/types').rect}  rect */
+/** @typedef {import('../type/types').circuit} circuit */
+/** @typedef {import('../type/types').input} input */
+/** @typedef {import('../type/types').output} output */
 
 export default class InputHandler {
   /** @type {Game} */ #game
+  /** @type {number} */ #lastClick;
 
   /** @param {Game} game */
   constructor(game) {
     this.#game = game;
+    this.#lastClick = game.timer;
 
     addEventListener('mousemove', (e) => {
       e.preventDefault();
-      document.getElementById('canvasContainer').classList.remove('curser-pointer');
-      this.#game.mousePos = { x: e.x - 30, y: e.y - 30 };
-
-      const mouseOverBtn = this.#game.detectMouseOver(this.#game.ui.wireBtn),
-        mouseOverGateBox = this.#game.detectMouseOver(this.#game.ui.gateBox);
-
-      this.#game.sprites.forEach((sprite) => {
-        sprite.inputPos.forEach((pos) => {
-          if (this.#game.detectMouseOver({ x: pos.x - 2, y: pos.y - 5, width: 10, height: 10 }) && this.#game.wireMode) {
-            document.getElementById('canvasContainer').classList.add('curser-pointer');
-          }
-        });
-        sprite.outputPos.forEach((pos) => {
-          if (this.#game.detectMouseOver({ x: pos.x - 2, y: pos.y - 5, width: 10, height: 10 }) && this.#game.wireMode) {
-            document.getElementById('canvasContainer').classList.add('curser-pointer');
-          }
-        });
+      this.#game.detectMouseMove(e.x, e.y);
+      this.#game.ui.detectMouseOver();
+      this.#game.gates.forEach(/** @type {Gate} */(gate) => {
+        gate.detectMouseOver();
       });
-
-      if (mouseOverBtn || mouseOverGateBox) document.getElementById('canvasContainer').classList.add('curser-pointer');
+      this.#game.switches.forEach(/** @type {Switch} */(input) => {
+        input.detectMouseOver();
+      });
     });
 
-    window.addEventListener('click', (e) => {
-      if (this.#game.detectMouseOver(this.#game.ui.wireBtn)) {
-        if (!this.#game.wireMode) {
-          this.#game.wireMode = true;
-        } else {
-          this.#game.wireMode = false;
-        }
+    addEventListener('click', (e) => {
+      this.#game.ui.detectClick();
+
+      if (((this.#game.timer - this.#lastClick) / 1000) > 0.5) {
+        this.#game.gates.forEach(/** @type {Gate} */(gate) => {
+          gate.detectClick(this.#game.mousePos.x, this.#game.mousePos.y);
+        });
+        this.#game.switches.forEach(/** @type {Switch} */(input) => {
+          input.detectClick(this.#game.mousePos.x, this.#game.mousePos.y);
+        });
+        this.#game.wires.forEach(/** @type {Wire} */(wire) => {
+          wire.detectClick(this.#game.mousePos.x, this.#game.mousePos.y);
+        });
       }
+      
+      this.#lastClick = this.#game.timer;
     });
 
-    window.addEventListener('dblclick', (e) => {
-      
+    addEventListener('dblclick', (e) => {
+      this.#game.wires.forEach(/** @type {Wire} */(wire) => {
+        wire.detectDbClick();
+      })
     });
 
     addEventListener('mousedown', () => {
-      this.#game.mousePress = true;
+      this.#game.ui.detectMouseDown();
+
+      // TODO: move into gate detectMouseDown method
+      this.#game.gates.forEach(/** @type {Gate} */(gate) => {
+        gate.detectMouseDown();
+      });
+      this.#game.switches.forEach(/** @type {Switch} */(input) => {
+        input.detectMouseDown();
+      })
     });
 
     addEventListener('mouseup', () => {
-      this.#game.mousePress = false;
+      this.#game.gates.forEach(/** @type {Gate} */(gate) => {
+        gate.detectMouseUp();
+      });
+      this.#game.switches.forEach(/** @type {Switch} */(input) => {
+        input.detectMouseUp();
+      });
     });
   }
 }
