@@ -1,5 +1,6 @@
 // @ts-check
 
+import { drawCurvedRect } from "../utilities";
 import Game from "./Game";
 import { Switch } from "./sprites/circuits";
 import { NOT, AND, OR } from './sprites/circuits/gates';
@@ -83,77 +84,13 @@ export default class UI {
     ctx.stroke();
 
     const r = 10;
-    ctx.beginPath();
-    ctx.fillStyle = '#666'
-    ctx.moveTo(this.#wireBtn.x + r, this.#wireBtn.y);
-    ctx.lineTo(this.#wireBtn.x + (this.#wireBtn.width) - r, this.#wireBtn.y);
-    ctx.quadraticCurveTo(
-      this.#wireBtn.x + this.#wireBtn.width,
-      this.#wireBtn.y,
-      this.#wireBtn.x + this.#wireBtn.width,
-      this.#wireBtn.y + r,
-    );
-    ctx.lineTo(this.#wireBtn.x + this.#wireBtn.width, this.#wireBtn.y + this.#wireBtn.height - r);
-    ctx.quadraticCurveTo(
-      this.#wireBtn.x + this.#wireBtn.width,
-      this.#wireBtn.y + this.#wireBtn.height,
-      this.#wireBtn.x + this.#wireBtn.width - r,
-      this.#wireBtn.y + this.#wireBtn.height,
-    );
-    ctx.lineTo(this.#wireBtn.x + r, this.#wireBtn.y + this.#wireBtn.height);
-    ctx.quadraticCurveTo(
-      this.#wireBtn.x,
-      this.#wireBtn.y + this.#wireBtn.height,
-      this.#wireBtn.x,
-      this.#wireBtn.y + this.#wireBtn.height - r
-    );
-    ctx.lineTo(this.#wireBtn.x, this.#wireBtn.y + r);
-    ctx.quadraticCurveTo(
-      this.#wireBtn.x, this.#wireBtn.y,
-      this.#wireBtn.x + r, this.#wireBtn.y,
-    );
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
 
+    drawCurvedRect(ctx, this.#wireBtn, r, '#666');
     ctx.fillStyle = 'white';
     ctx.font = '16px Helvetica'
     ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
 
-    
-    ctx.beginPath();
-    ctx.fillStyle = '#bd0b1d'
-    ctx.moveTo(this.#deleteBtn.x + r, this.#deleteBtn.y);
-    ctx.lineTo(this.#deleteBtn.x + (this.#deleteBtn.width) - r, this.#deleteBtn.y);
-    ctx.quadraticCurveTo(
-      this.#deleteBtn.x + this.#deleteBtn.width,
-      this.#deleteBtn.y,
-      this.#deleteBtn.x + this.#deleteBtn.width,
-      this.#deleteBtn.y + r,
-    );
-    ctx.lineTo(this.#deleteBtn.x + this.#deleteBtn.width, this.#deleteBtn.y + this.#deleteBtn.height - r);
-    ctx.quadraticCurveTo(
-      this.#deleteBtn.x + this.#deleteBtn.width,
-      this.#deleteBtn.y + this.#deleteBtn.height,
-      this.#deleteBtn.x + this.#deleteBtn.width - r,
-      this.#deleteBtn.y + this.#deleteBtn.height,
-    );
-    ctx.lineTo(this.#deleteBtn.x + r, this.#deleteBtn.y + this.#deleteBtn.height);
-    ctx.quadraticCurveTo(
-      this.#deleteBtn.x,
-      this.#deleteBtn.y + this.#deleteBtn.height,
-      this.#deleteBtn.x,
-      this.#deleteBtn.y + this.#deleteBtn.height - r
-    );
-    ctx.lineTo(this.#deleteBtn.x, this.#deleteBtn.y + r);
-    ctx.quadraticCurveTo(
-      this.#deleteBtn.x, this.#deleteBtn.y,
-      this.#deleteBtn.x + r, this.#deleteBtn.y,
-    );
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
+    drawCurvedRect(ctx, this.#deleteBtn, r, '#bd0b1d');
     ctx.fillStyle = 'white';
     ctx.font = '16px Helvetica'
     ctx.fillText('Delete', this.#deleteBtn.x + (this.#deleteBtn.width * 0.15), this.#deleteBtn.y + (this.#deleteBtn.height * 0.75));

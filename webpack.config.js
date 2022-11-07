@@ -9,7 +9,7 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'build'),
   },
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       // babel js parsing

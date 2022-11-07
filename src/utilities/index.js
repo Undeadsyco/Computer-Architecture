@@ -62,3 +62,42 @@ export const drawHalfCircle = (ctx, x, y, r, options = { lineColor: 'black', fil
   ctx.fill();
   ctx.stroke();
 }
+
+export const drawCurvedRect = (ctx, rect, r, color) => {
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  ctx.moveTo(rect.x + r, rect.y);
+  ctx.lineTo(rect.x + (rect.width) - r, rect.y);
+  ctx.quadraticCurveTo(
+    rect.x + rect.width,
+    rect.y,
+    rect.x + rect.width,
+    rect.y + r,
+  );
+  ctx.lineTo(rect.x + rect.width, rect.y + rect.height - r);
+  ctx.quadraticCurveTo(
+    rect.x + rect.width,
+    rect.y + rect.height,
+    rect.x + rect.width - r,
+    rect.y + rect.height,
+  );
+  ctx.lineTo(rect.x + r, rect.y + rect.height);
+  ctx.quadraticCurveTo(
+    rect.x,
+    rect.y + rect.height,
+    rect.x,
+    rect.y + rect.height - r
+  );
+  ctx.lineTo(rect.x, rect.y + r);
+  ctx.quadraticCurveTo(
+    rect.x, rect.y,
+    rect.x + r, rect.y,
+  );
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.restore();
+}
