@@ -91,8 +91,12 @@ export default class SISOGate extends Gate {
     super.detectMouseUp();
   }
 
-  detectClick() {
-    super.detectClick()
+  /**
+   * @param {number} x 
+   * @param {number} y 
+   */
+  detectClick(x, y) {
+    super.detectClick(x, y);
   }
 
   detectDbClick() {

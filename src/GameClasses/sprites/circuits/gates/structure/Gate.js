@@ -4,7 +4,7 @@ import Game from "../../../../Game";
 import Circuit from "../../Circuit";
 import Wire from "../../Wire";
 
-/** @typedef {import('../../../../../type/types').gate2} gate */
+/** @typedef {import('../../../../../type/types').gate} gate */
 
 export default class Gate extends Circuit {
   /** @type {Array<Wire>} */ #wires;
@@ -33,81 +33,40 @@ export default class Gate extends Circuit {
     super.draw(ctx);
   }
 
-  detectMouseOver() {
-    super.detectMouseOver();
+  mouseOverAction() {
 
-    if (!this.game.wireMode  && !this.game.deleteMode && this.game.detectMouseOver(this)) {
-      document.getElementById('canvasContainer')?.classList.add('curser-grab');
-    } else if (this.game.wireMode) {
-      const length = this.inputs.length >= this.outputs.length ? this.inputs.length : this.outputs.length;
-      for (let i = 0; i < length; i += 1) {
-        if (this.inputs[i]) {
-          if (this.game.detectMouseOver({ x: this.inputs[i].x - 5, y: this.inputs[i].y - 5, width: 15, height: 15 }) && this.game.wireMode) {
-            document.getElementById('canvasContainer')?.classList.add('curser-pointer');
-          }
-        }
-        if (this.outputs[i]) {
-          if (this.game.detectMouseOver({ x: this.outputs[i].x - 5, y: this.outputs[i].y - 5, width: 15, height: 15 }) && this.game.wireMode) {
-            document.getElementById('canvasContainer')?.classList.add('curser-pointer');
-          }
-        }
-      }
-    } else if (this.game.deleteMode && this.game.detectMouseOver(this)) {
-      this.game.container?.classList.replace('curser-grab', 'curser-pointer');
-    }
   }
 
-  detectMouseDown() {
-    super.detectMouseDown();
+  mouseDownAction() {
 
-    if (this.game.detectMouseOver(this) && !this.game.wireMode && !this.game.deleteMode && this.#wires.length === 0) {
-      document.getElementById('canvasContainer')?.classList.replace('curser-grab', 'curser-grabbing');
-      this.draggable = true;
-    }
   }
 
-  detectMouseUp() {
-    super.detectMouseUp();
+  mouseUpAction() {
 
-    this.game.gates.forEach(/** @type {gate} */(gate) => {
-      document.getElementById('canvasContainer')?.classList.replace('curser-grabbing', 'curser-grab');
-      gate.draggable = false;
-    });
   }
 
   /**
-   * @param {number} x
-   * @param {number} y 
+   * @param {number} [x]
+   * @param {number} [y]
    */
-  detectClick(x, y) {
-    super.detectClick(x, y);
+  clickActionAction(x, y) {
+    if (x && y) {
+      
+    } else {
 
-    if (this.game.wireMode && !this.game.wireBuildMode) {
-      const length = this.inputs.length >= this.outputs.length ? this.inputs.length : this.outputs.length;
-      for (let i = 0; i < length; i += 1) {
-        if (this.inputs[i] && this.game.detectMouseOver({ x: this.inputs[i].x - 5, y: this.inputs[i].y - 5, width: 15, height: 15 })) {
-          this.game.wireBuildMode = true;
-          const wire = new Wire(this.game, this.inputs[i].x, this.inputs[i].y, 0);
-          wire.inputGate = this;
-          this.#wires.push(wire);
-          this.game.wires.push(wire);
-        }
-        if (this.outputs[i] && this.game.detectMouseOver({ x: this.outputs[i].x - 5, y: this.outputs[i].y - 5, width: 15, height: 15 })) {
-          this.game.wireBuildMode = true;
-          const wire = new Wire(this.game, this.outputs[i].x, this.outputs[i].y, this.outputs[i].value);
-          wire.outputGate = this;
-          this.#wires.push(wire);
-          this.game.wires.push(wire);
-        }
-      }
-    }
-
-    if (this.game.deleteMode && this.game.detectMouseOver(this)) {
-      this.shouldDelete = true;
     }
   }
 
-  detectDbClick() {
-    super.detectDbClick();
+
+  /**
+   * @param {number} [x]
+   * @param {number} [y] 
+   */
+  dbClickAction(x, y) {
+    if (x && y) {
+
+    } else {
+
+    }
   }
 }

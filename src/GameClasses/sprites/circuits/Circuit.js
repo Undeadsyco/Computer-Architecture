@@ -35,47 +35,4 @@ export default class Circuit extends Sprite {
   draw(ctx) {
     super.draw(ctx);
   }
-
-  detectMouseOver() {
-    super.detectMouseOver();
-
-    if (!this.game.wireMode && this.game.detectMouseOver(this)) {
-      document.getElementById('canvasContainer')?.classList.add('curser-grab');
-    } else if (this.game.wireMode) {
-      const length = this.inputs.length >= this.#outputs.length ? this.inputs.length : this.#outputs.length;
-      for (let i = 0; i < length; i += 1) {
-        if (this.#inputs[i]) {
-          if (this.game.detectMouseOver({ x: this.#inputs[i].x - 5, y: this.#inputs[i].y - 5, width: 15, height: 15 }) && this.game.wireMode) {
-            document.getElementById('canvasContainer')?.classList.add('curser-pointer');
-          }
-        }
-        if (this.#outputs[i]) {
-          if (this.game.detectMouseOver({ x: this.#outputs[i].x - 5, y: this.#outputs[i].y - 5, width: 15, height: 15 }) && this.game.wireMode) {
-            document.getElementById('canvasContainer')?.classList.add('curser-pointer');
-          }
-        }
-      }          
-    }
-  }
-  
-  detectMouseDown() {
-    super.detectMouseDown();
-  }
-
-  detectMouseUp() {
-    super.detectMouseUp();
-  }
-
-
-  /**
-   * @param {number} x
-   * @param {number} y 
-   */
-   detectClick(x, y) {
-    super.detectClick(x, y);
-  }
-
-  detectDbClick() {
-    super.detectDbClick();
-  }
 }

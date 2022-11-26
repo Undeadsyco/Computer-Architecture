@@ -1,0 +1,10 @@
+Drag Gate from UI and drop on screen to place
+
+click on wire btn to activate wire mode
+
+once active click on gate input/outputs to start wire creation
+click on screen to place stop points
+db click on gate input/output to finish wire creation
+
+click on delete btn to activate delete mode
+click on gates to delete them

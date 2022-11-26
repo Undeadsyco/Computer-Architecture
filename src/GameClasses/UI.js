@@ -1,11 +1,12 @@
 // @ts-check
 
-import { drawCurvedRect } from "../utilities";
 import Game from "./Game";
-import { Switch } from "./sprites/circuits";
-import { NOT, AND, OR } from './sprites/circuits/gates';
+import GateState from "./States/GateState";
+import { utilFunctions } from "../utilities";
 
 
+
+/** @typedef {import("../type/types").state} state */
 /** @typedef {import("../type/types").rect} rect */
 /** @typedef {import('../type/types').circuit} circuit */
 /** @typedef {import("../type/types").input} input */
@@ -14,44 +15,54 @@ import { NOT, AND, OR } from './sprites/circuits/gates';
 export default class UI {
 
   /** @type {Game} */ #game
-  /** @type {Array<circuit>} */ #sprites = [];
+  /** @type {string} */ #state;
+  /** @type {number} */ #x;
+  /** @type {number} */ #y;
+  /** @type {number} */ #width;
+  /** @type {number} */ #height;
+  /** @type {number} */ #space = 10;
 
-  /** @type {rect} */ #gateBox = { x: 5, y: 5, width: 280, height: 45 };
-  /** @type {Array<rect>} */ #gateboxes = [
-    { x: 10, y: 10, width: 60, height: 36 },
-    { x: 80, y: 10, width: 60, height: 36 },
-    { x: 150, y: 10, width: 60, height: 36 },
-    { x: 220, y: 10, width: 60, height: 36 },
-  ];
+  /** @type {rect} */ #gateBox;
+  /** @type {Array<rect>} */ #gateboxes;
 
-  /** @type {rect} */ #wireBtn = { x: 15 + this.#gateBox.width, y: 5, width: 60, height: 20 };
-  /** @type {rect} */ #deleteBtn = {
-    x: this.#wireBtn.x,
-    y: this.#wireBtn.y + this.#wireBtn.height + 5,
-    width: this.#wireBtn.width,
-    height: this.#wireBtn.height,
-  };
+  /** @type {rect} */ #wireBtn;
+  /** @type {rect} */ #deleteBtn;
+  /** @type {rect} */ #gateBtn;
 
-  /** @param {Game} game */
-  constructor(game) {
+  /** 
+   * @param {Game} game 
+   * @param {state} state
+   */
+  constructor(game, state) {
     this.#game = game;
-    this.#sprites.push(
-      new Switch(this.#game, 10, 10),
-      new NOT(this.#game, 80, 10, 0),
-      new AND(this.#game, 150, 10, [0, 0]),
-      new OR(this.#game, 220, 10, [0, 0]),
-    );
-    this.#sprites.forEach(/** @type {circuit} */(circuit) => {
-      circuit.width = 60;
-      circuit.height = 60 * 0.6;
-      circuit.radius = circuit.height * 0.5;
-      circuit.inputs?.forEach(/** @type {input} */(input) => {
-        input.visible = false;
-      });
-      circuit.outputs?.forEach(/** @type {output} */(output) => {
-        output.visible = false;
-      })
-    });
+    this.#selectState(state);
+    this.#x = state.x;
+    this.#y = state.y;
+    this.#width = state.width;
+    this.#height = state.height;
+
+    this.#wireBtn = { x: this.#x + this.#space, y: this.#y + this.#space, width: 80, height: 25 };
+    this.#deleteBtn = {
+      x: this.#wireBtn.x,
+      y: this.#wireBtn.y + this.#wireBtn.height + this.#space,
+      width: this.#wireBtn.width,
+      height: this.#wireBtn.height,
+    };
+    this.#gateBtn = {
+      x: this.#wireBtn.x + this.#wireBtn.width + this.#space,
+      y: this.#y + this.#space,
+      width: 25,
+      height: (this.#wireBtn.height * 2) + this.#space,
+      maxWidth: 100 + (this.#space * 5) + 25,
+    }
+
+    this.#gateBox = { x: this.#gateBtn.x + this.#gateBtn.width + this.#space, y: this.#y + this.#space, width: this.#gateBtn.width, height: this.#gateBtn.height };
+    this.#gateboxes = [
+      { x: 15, y: 10, width: 60, height: 36 },
+      { x: 80, y: 10, width: 60, height: 36 },
+      { x: 150, y: 10, width: 60, height: 36 },
+      { x: 220, y: 10, width: 60, height: 36 },
+    ];
   }
 
   get gateBox() { return this.#gateBox; }
@@ -61,115 +72,116 @@ export default class UI {
   get wireBtn() { return this.#wireBtn; }
 
   update() {
-    this.#sprites.forEach(/** @type {circuit} */(sprite) => {
-      sprite.update();
-    });
+    console.log(this.#state);
+    this.#selectState(this.#game.currentState);
+    switch (this.#state) {
+      case 'GateState':
+        if (this.#gateBtn.maxWidth) {
+          if (this.#gateBtn.width < this.#gateBtn.maxWidth) {
+            this.#gateBtn.width += 25;
+            console.log(this.#gateBtn.width);
+          }
+          else this.#gateBtn.width = this.#gateBtn.maxWidth;
+        }
+        break;
+      default:
+        if (this.#gateBtn.width < 25) {
+          this.#gateBtn.width -= 25;
+          console.log(this.#gateBtn.width);
+        }
+        else this.#gateBtn.width = 25;
+
+        break;
+    }
+
+    if (
+      this.#game.detectMouseOver(this.#wireBtn) ||
+      this.#game.detectMouseOver(this.#gateBtn) ||
+      this.#game.detectMouseOver(this.#deleteBtn)
+    ) {
+      this.#game.container?.classList.add('curser-pointer');
+    } else this.#game.container?.classList.remove('curser-pointer');
   }
 
   /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
     ctx.save();
 
-    ctx.beginPath();
-    ctx.strokeStyle = 'black';
-    ctx.fillStyle = 'white';
-    ctx.shadowOffsetX = -5;
-    ctx.shadowOffsetY = -2;
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = 'gray';
-
-    ctx.beginPath();
-    ctx.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
-    ctx.fill();
-    ctx.stroke();
-
     const r = 10;
 
-    drawCurvedRect(ctx, this.#wireBtn, r, '#666');
-    ctx.fillStyle = 'white';
-    ctx.font = '16px Helvetica'
-    ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.25), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
+    switch (this.#state) {
+      case 'GameState':
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = 'white';
+        ctx.shadowOffsetX = -5;
+        ctx.shadowOffsetY = -2;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'gray';
 
-    drawCurvedRect(ctx, this.#deleteBtn, r, '#bd0b1d');
+        ctx.beginPath();
+        ctx.rect(this.#gateBox.x, this.#gateBox.y, this.#gateBox.width, this.#gateBox.height);
+        ctx.fill();
+        ctx.stroke();
+
+        this.#gateboxes.forEach(/** @type {rect} */({ x, y, width, height }) => {
+          ctx.beginPath();
+          ctx.rect(x, y, width, height);
+          ctx.stroke();
+        });
+        break;
+      default:
+        break;
+    }
+    utilFunctions.drawCurvedRect(ctx, this.#wireBtn, r, 'green');
     ctx.fillStyle = 'white';
     ctx.font = '16px Helvetica'
-    ctx.fillText('Delete', this.#deleteBtn.x + (this.#deleteBtn.width * 0.15), this.#deleteBtn.y + (this.#deleteBtn.height * 0.75));
+    ctx.fillText('wire', this.#wireBtn.x + (this.#wireBtn.width * 0.325), this.#wireBtn.y + (this.#wireBtn.height * 0.75));
+
+    utilFunctions.drawCurvedRect(ctx, this.#deleteBtn, r, '#bd0b1d');
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Helvetica'
+    ctx.fillText('Delete', this.#deleteBtn.x + (this.#deleteBtn.width * 0.2), this.#deleteBtn.y + (this.#deleteBtn.height * 0.75));
+
+    utilFunctions.drawCurvedRect(ctx, this.#gateBtn, r, '#666');
+    ctx.beginPath();
+    ctx.moveTo(this.#gateBtn.x + this.#gateBtn.width * 0.25, this.#gateBtn.y + this.#gateBtn.height * 0.25);
+    ctx.lineTo(this.#gateBtn.x + this.#gateBtn.width * 0.75, this.#gateBtn.y + this.#gateBtn.height * 0.5);
+    ctx.lineTo(this.#gateBtn.x + this.#gateBtn.width * 0.25, this.#gateBtn.y + this.#gateBtn.height * 0.75);
+    ctx.closePath();
+    ctx.stroke();
 
     ctx.restore();
 
-    this.#gateboxes.forEach(/** @type {rect} */({ x, y, width, height }) => {
-      ctx.beginPath();
-      ctx.rect(x, y, width, height);
-      ctx.stroke();
-    });
-
-    this.#sprites.forEach(/** @type {circuit} */(sprite) => {
-      sprite.draw(ctx);
-    });
   }
 
-  detectMouseOver() {
-    if (this.#game.detectMouseOver(this.#wireBtn)) this.#game.container?.classList.add('curser-pointer');
-    if (this.#game.detectMouseOver(this.#deleteBtn)) this.#game.container?.classList.add('curser-pointer');
-    this.#gateboxes.forEach(/** @type {rect} */(box) => {
-      if (this.#game.detectMouseOver(box) && !this.#game.wireMode) {
-        this.#game.container?.classList.add('curser-grab');
-      }
-    });
-  }
-
-  detectMouseDown() {
-    if (this.#game.detectMouseOver(this.#gateBox)) {
-      this.#game.ui.gateBoxes.forEach(/** @type {rect} */(box, i) => {
-        if (this.#game.detectMouseOver(box) && !this.#game.wireMode) {
-          switch (i) {
-            case 0:
-              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
-              const input = new Switch(this.#game, this.#game.mousePos.x, this.#game.mousePos.y);
-              input.draggable = true;
-              this.#game.switches.push(input);
-              break;
-            case 1:
-              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
-              const not = new NOT(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, 0);
-              not.draggable = true;
-              this.#game.gates.push(not);
-              break;
-            case 2:
-              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
-              const and = new AND(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0]);
-              and.draggable = true;
-              this.#game.gates.push(and);
-              break;
-            case 3:
-              this.#game.container?.classList.replace('curser-grab', 'curser-grabbing');
-              const or = new OR(this.#game, this.#game.mousePos.x, this.#game.mousePos.y, [0, 0]);
-              or.draggable = true;
-              this.#game.gates.push(or);
-              break;
-            default:
-              break;
-          }
-        }
-      });
+  /** @param {state} state */
+  #selectState(state) {
+    switch (state.constructor.name) {
+      case 'MainState':
+        this.#state = 'MainState';
+      case 'GateState':
+        this.#state = 'GateState';
+      default:
+        this.#state = 'MainState';
     }
   }
 
-  detectMouseUp() { }
+  mouseOverAction() { }
 
-  detectClick() {
-    if (this.#game.detectMouseOver(this.wireBtn)) {
-      if (!this.#game.wireMode) {
-        this.#game.wireMode = true;
-      } else {
-        this.#game.wireMode = false;
-      }
-    }
+  mouseDownAction() { }
 
-    if (this.#game.detectMouseOver(this.#deleteBtn)) {
-      this.#game.toggleDeleteMode();
+  mouseUpAction() { }
+
+  /**
+   * @param {number} x
+   * @param {number} y 
+   */
+  clickAction(x, y) {
+    if (this.#game.detectMouseOver(this.#gateBtn)) {
+      this.#game.stateStack.push(new GateState(this.#game));
     }
   }
 
-  detectDbClick() { }
+  dbClickAction() { }
 }

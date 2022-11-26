@@ -5,25 +5,26 @@ import Sprite from "./sprites/Sprite";
 import { Switch, Wire } from "./sprites/circuits";
 import UI from "./UI";
 import { Gate } from "./sprites/circuits/gates/structure";
+import { MainState } from "./States";
+
+/** @typedef {import('../type/types').rect} rect */
+/** @typedef {import('../type/types').gate} gate */
+/** @typedef {import('../type/types').sprite} sprite */
+/** @typedef {import('../type/types').switches} switches */
+/** @typedef {import('../type/types').wire} wire */
+/** @typedef {import('../type/types').state} state */
 
 export default class Game {
+  /** @type {(HTMLElement | null)} */ #container = document.getElementById('canvasContainer');
+  
+  /** @type {UI} */ #UI;
+
   /** @type {number} */ #width;
   /** @type {number} */ #height;
-
-  /** @type {import('../type/types').pos} */ #mousePos = { x: 0, y: 0 };
-
-  /** @type {Array<Gate>} */ #gates = [];
-  /** @type {Array<Switch>} */ #switches = [];
-  /** @type {Array<Wire>} */ #wires = [];
-
-  /** @type {(HTMLElement | null)} */ #container = document.getElementById('canvasContainer');
   /** @type {InputHandler} */ #inputHandler;
-  /** @type {UI} */ #ui = new UI(this);
-  
-  /** @type {number} */ #timer = 0;
-  /** @type {boolean} */ #wireMode = false;
-  /** @type {boolean} */ #wireBuildMode = false;
-  /** @type {boolean} */ #deleteMode = false;
+  /** @type {Array<state>} */ #stateStack = [new MainState(this)];
+  /** @type {state} */ #currentState = this.#stateStack[0];
+  /** @type {import('../type/types').pos} */ #mousePos = { x: 0, y: 0 };
 
   /**
    * @param {number} width
@@ -32,94 +33,50 @@ export default class Game {
   constructor(width, height) {
     this.#width = width;
     this.#height = height;
-
     this.#inputHandler = new InputHandler(this);
+    this.#currentState = this.#stateStack[this.#stateStack.length - 1];
+    this.#UI = new UI(this, this.currentState);
   }
-
-  get ui() { return this.#ui;  }
 
   get container() { return this.#container };
 
-  get gates() { return this.#gates; }
-  set gates(gates) { this.#gates = gates; }
+  get UI() { return this.#UI };
 
-  get switches() { return this.#switches; }
-  set switches(switches) { this.switches = switches; }
+  get width() { return this.#width; }
+  set width(width) { this.#width = width; }
 
-  get wires() { return this.#wires; }
-  set wires(wires) { this.#wires = wires; }
+  get height() { return this.#height; }
+  set height(height) { this.#height = height; }
+
+  get currentState() { return this.#currentState; }
+
+  get stateStack() { return this.#stateStack; }
+  set stateStack(stack) { this.#stateStack = stack; }
 
   get mousePos() { return this.#mousePos; }
   set mousePos(pos) { this.#mousePos = pos; }
 
-  get timer() { return this.#timer; }
-  set timer(value) { this.#timer = value; }
-
-  get wireMode() { return this.#wireMode; }
-  set wireMode(value) { this.#wireMode = value; }
-
-  get wireBuildMode() { return this.#wireBuildMode; }
-  set wireBuildMode(value) { this.#wireBuildMode = value; }
-
-  get deleteMode() { return this.#deleteMode; }
-  set deleteMode(value) { this.#deleteMode = value; }
-  toggleDeleteMode() { this.#deleteMode = !this.#deleteMode}
-
-  /**
-   * @param {number} deltaTime 
-   */
+  /** @param {number} deltaTime */
   update(deltaTime) {
-    this.#timer += deltaTime;
-    this.#gates.forEach(/** @type {Gate} */(sprite) => {
-      sprite.update();
-    });
-    this.#switches.forEach(/** @type {Switch} */(input) => {
-      input.update();
-    });
-    this.#wires.forEach(/** @type {Wire} */(wire) => {
-      wire.update();
+    // console.log(this.#currentState.constructor.name);
+    this.#stateStack.forEach((state) => {
+      if (state.shouldPop) {
+        this.#stateStack.pop();
+      }
     });
 
-    this.#ui.update();
+    this.#currentState = this.#stateStack[this.#stateStack.length - 1];
 
-    this.#gates = this.#gates.filter(/** @type {Gate} */(sprite) => !sprite.shouldDelete);
-    this.#switches = this.#switches.filter(/** @type {Switch} */(input) => !input.shouldDelete);
+    this.#stateStack.forEach(state => state.update(deltaTime));
+
+    this.#UI.update();
   }
 
   /** @param {CanvasRenderingContext2D} ctx */
   draw(ctx) {
-    if (this.#wireMode) {
-      ctx.save();
-
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'green';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.strokeRect(2, 2, this.#width - 4, this.#height - 4);
-      ctx.restore();
-    }
-    if (this.#deleteMode) {
-      ctx.save();
-
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.strokeRect(2, 2, this.#width - 4, this.#height - 4);
-      ctx.restore();
-    }
-
-    this.#gates.forEach(/** @type {Gate} */ (sprite) => {
-      sprite.draw(ctx);
-    });
-    this.#switches.forEach(/** @type {Switch} */ (input) => {
-      input.draw(ctx);
-    });
-    this.#wires.forEach(/** @type {Wire} */ (wire) => {
-      wire.draw(ctx);
-    });
-
-    this.#ui.draw(ctx);
+    this.#stateStack.forEach(state => state.draw(ctx));
+    
+    this.#UI.draw(ctx);
   }
 
   /**
@@ -127,13 +84,12 @@ export default class Game {
    * @param {number} y 
    */
   detectMouseMove(x, y) {
-    this.#container?.classList.remove('curser-grab', 'curser-pointer', 'curser-grabbing');
-    this.#mousePos = { x: x - 30, y: y - 28 };
+    this.mousePos = { x, y };
   }
 
   /**
-   * @param {Sprite} rect1
-   * @param {Sprite} rect2
+   * @param {sprite} rect1
+   * @param {sprite} rect2
    */
   detectCollision(rect1, rect2) {
     return (
@@ -145,14 +101,14 @@ export default class Game {
   }
 
   /** 
-   * @param {import('../type/types').rect} rect
+   * @param {rect} rect
    */
   detectMouseOver(rect) {
     return (
-      this.#mousePos.x > rect.x &&
-      this.#mousePos.x < rect.x + rect.width &&
-      this.#mousePos.y > rect.y &&
-      this.#mousePos.y < rect.y + rect.height
+      this.mousePos.x > rect.x &&
+      this.mousePos.x < rect.x + rect.width &&
+      this.mousePos.y > rect.y &&
+      this.mousePos.y < rect.y + rect.height
     );
   }
 }

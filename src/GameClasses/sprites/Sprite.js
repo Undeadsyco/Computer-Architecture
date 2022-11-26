@@ -58,7 +58,7 @@ export default class Sprite {
 
     this.#bgColor = 'black'
     this.#borderColor = 'black'
-  
+
     this.#outline = false;
     this.#isDraggable = false;
     this.#isStatic = false;
@@ -120,18 +120,4 @@ export default class Sprite {
       ctx.restore();
     }
   }
-
-  detectMouseOver() {}
-  
-  detectMouseDown() {}
-
-  detectMouseUp() {}
-
-  /**
-   * @param {number} x
-   * @param {number} y 
-   */
-  detectClick(x, y) {}
-
-  detectDbClick() {}
 }

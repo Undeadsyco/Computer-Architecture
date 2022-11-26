@@ -107,8 +107,12 @@ export default class DISOGate extends Gate {
     super.detectMouseUp();
   }
 
-  detectClick() {
-    super.detectClick()
+  /**
+   * @param {number} x 
+   * @param {number} y 
+   */
+  detectClick(x, y) {
+    super.detectClick(x, y);
   }
 
   detectDbClick() {

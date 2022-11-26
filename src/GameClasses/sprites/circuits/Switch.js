@@ -52,55 +52,36 @@ export default class Switch extends Circuit {
     ctx.strokeRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
     ctx.stroke();
 
-    if (this.#output.visible) {
-      if (this.game.wireMode) {
-        ctx.beginPath();
-        ctx.arc(this.#output.x, this.#output.y, 5, 0, Math.PI, false);
-        ctx.stroke(); 
-      }
-    }
-
     ctx.strokeText(this.#isActive ? 'ON' : 'OFF', this.x + this.width * 0.25, this.y + this.height * 0.75 - 2);
 
     ctx.restore();
   }
 
   detectMouseOver() {
-    super.detectMouseOver();
 
-    if (this.game.detectMouseOver(this) && !this.game.wireMode) {
-      this.game.container?.classList.add('curser-pointer');
-    }
   }
 
   detectMouseDown() {
-    super.detectMouseDown();
-    // if (this.game.detectMouseOver(this)) {
-    //   this.game.container?.classList.replace('curser-grab', 'curser-grabbing');
-    //   this.draggable = true;
-    // }
+    
   }
 
   detectMouseUp() {
-    super.detectMouseUp();
-
-    this.draggable = false;
-    this.game.container?.classList.replace('curser-grabbing', 'curser-grab');
+    
   }
 
   /**
-   * @param {number} x
-   * @param {number} y 
+   * @param {number} [x]
+   * @param {number} [y]
    */
   detectClick(x, y) {
-    super.detectClick(x, y);
-
-    if (this.game.detectMouseOver(this) && !this.game.wireMode) {
-      this.#isActive = !this.#isActive;
-    }
+    
   }
 
-  detectDbClick() {
-    super.detectDbClick();
+  /**
+   * @param {number} [x]
+   * @param {number} [y]
+   */
+  detectDbClick(x, y) {
+    
   }
 }
